@@ -54,7 +54,7 @@ XeLaTeX executable above.
 The source contains the supplied author list, affiliations, contribution
 statement, no-external-funding statement, and no-competing-interests statement.
 The public data/code archive is https://github.com/pengliangtian06-commits/
-transparent-risk-sensitive-ris-control with DOI 10.5281/zenodo.23220663. The
+transparent-risk-sensitive-ris-control with DOI 10.5281/zenodo.23221231. The
 PDF continues to state that physical RIS phase-write timing, physical slot
 timing, and OTA validation are UNKNOWN/NO-GO; those claims must not be inferred
 from the simulator timing record.
