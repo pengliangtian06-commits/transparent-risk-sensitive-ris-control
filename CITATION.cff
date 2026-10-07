@@ -16,3 +16,6 @@ authors:
 abstract: "Reproducible normalized RIS phase-control simulation with temporal CSI uncertainty and a frozen held-out Campaign C."
 license: MIT
 repository-code: "https://github.com/pengliangtian06-commits/transparent-risk-sensitive-ris-control"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23220663"

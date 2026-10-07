@@ -3,6 +3,7 @@
 This archive accompanies the Physical Communication manuscript by Pengliang Tian, Pengyuan Zhang, Haoshan Sun, and Changjiang Zhang. It contains the normalized simulator, frozen Campaign C summaries and raw records, figure sources/exports, and the LaTeX submission source.
 
 Repository: https://github.com/pengliangtian06-commits/transparent-risk-sensitive-ris-control
+Archive DOI: https://doi.org/10.5281/zenodo.23220663
 
 ## Reproduction
 
