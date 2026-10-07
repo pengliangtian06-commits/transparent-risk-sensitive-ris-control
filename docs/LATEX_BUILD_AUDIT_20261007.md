@@ -20,10 +20,10 @@ xelatex -interaction=nonstopmode -halt-on-error -file-line-error physical_commun
 The generator records the byte-level source hash in
 `paper/physical_communication_submission.provenance.json`. The recorded TeX
 SHA-256 is
-`2d73e915ce3387ecdcae7f6f74a15c5939aeac72dc39d0c0c1745d9a02819fb2`, which
+`2e1bcae2c3d15c90f4e6d7778443beddee2f6dfc228a7599a2baefc4c47d0f92`, which
 matches the generated file after writing with explicit LF line endings. The
 final PDF SHA-256 is
-`6d4b7c4f1d8bb77c957d3bd0a5941eb1345a85892369df19140ab115a5347fc8`.
+`80a303fdbfbcb4ea7d8ab159a0d4fe9eea7ae2d278cc3869b63371e663a186e0`.
 
 ## Automated checks
 
@@ -86,6 +86,6 @@ returned the host error `Unable to find standard directories for platform`;
 local MiKTeX XeLaTeX is the verified compiler for this environment.
 
 The current TeX SHA-256 is
-`2d73e915ce3387ecdcae7f6f74a15c5939aeac72dc39d0c0c1745d9a02819fb2`.
+`2e1bcae2c3d15c90f4e6d7778443beddee2f6dfc228a7599a2baefc4c47d0f92`.
 The current manuscript PDF SHA-256 is
-`6d4b7c4f1d8bb77c957d3bd0a5941eb1345a85892369df19140ab115a5347fc8`.
+`80a303fdbfbcb4ea7d8ab159a0d4fe9eea7ae2d278cc3869b63371e663a186e0`.
