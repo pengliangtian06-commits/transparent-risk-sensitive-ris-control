@@ -1,0 +1,21 @@
+purpose: Closest-work verification for temporal posterior and risk-budget RIS control
+retrieval_date: '2026-10-07'
+sources_attempted:
+  - IEEE Xplore (search response was a JavaScript challenge)
+  - ScienceDirect (HTTP 403)
+fallback: Crossref publisher-deposited DOI metadata and OpenAlex linked author manuscripts
+papers:
+  - {id: zhao_outage_2021, doi: 10.1109/tsp.2021.3056899, axis: robust_outage}
+  - {id: zhou_robust_2020, doi: 10.1109/lwc.2020.3000490, axis: robust_outage}
+  - {id: kalman_tracking, doi: 10.1109/twc.2023.3312426, axis: temporal_tracking}
+  - {id: tracking_prediction, doi: 10.1109/twc.2022.3196313, axis: temporal_tracking}
+  - {id: aging_precoding, doi: 10.1109/tvt.2022.3210548, axis: aging}
+  - {id: aging_statistical, doi: 10.1109/tvt.2022.3203796, axis: aging}
+  - {id: aging_cellfree, doi: 10.1109/tvt.2024.3376557, axis: aging}
+  - {id: predictive_dl, doi: 10.1109/twc.2023.3327362, axis: predictive_control}
+  - {id: active_beam_tracking, doi: 10.1109/icassp49357.2023.10097134, axis: predictive_control}
+  - {id: closed_loop_mpc, doi: 10.1109/lwc.2026.3701340, axis: predictive_control}
+  - {id: adaptive_tracking, doi: 10.1109/access.2025.3570772, axis: temporal_tracking}
+  - {id: hybrid_robust, doi: 10.1109/twc.2022.3222218, axis: robust_outage}
+  - {id: phycom_robust, doi: 10.1016/j.phycom.2026.103011, axis: venue_scope}
+  - {id: aging_prediction, doi: 10.1109/tvt.2025.3556277, axis: temporal_tracking}

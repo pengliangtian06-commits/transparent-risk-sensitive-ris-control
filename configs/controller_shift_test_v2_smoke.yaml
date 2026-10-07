@@ -1,0 +1,39 @@
+experiment_id: controller_shift_test_v2_smoke
+purpose: One-condition smoke of simulated controller admission and delivery
+base_system:
+  bs_antennas: 4
+  noise_power: 1.0e-3
+  transmit_power: 1.0
+  rician_k: 3.0
+  phase_bits: 2
+  backend: numpy
+sweep:
+  ris_elements: [16]
+  users: [2]
+  error_scales: [0.12]
+  temporal_rhos: [0.70]
+  seeds: [701]
+  episodes: 1
+  slots: 2
+  controller_kinds: [posterior_triggered, periodic_risk, always_risk, periodic_nominal]
+controller:
+  refresh_period: 3
+  uncertainty_threshold: 0.20
+  innovation_threshold: 3.0
+  min_refresh_gap: 1
+  scenario_count: 4
+  reliability_target: 0.5
+evaluation:
+  outage_quantile: 0.05
+  outage_threshold: 0.5
+  matched_candidate_budget: 128
+  bootstrap_draws: 1000
+service:
+  validation_samples: 64
+  family_delta: 0.05
+  outage_epsilon: 0.5
+  bandwidth_hz: 1000000
+  slot_seconds: 2.0
+  payload_bits_per_user: 1000000
+  deadline_ms: 2000
+  rejection_counts_as_service_violation: true

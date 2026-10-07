@@ -1,0 +1,29 @@
+purpose: Paired held-out validation of posterior-triggered RIS phase refresh
+base_system:
+  bs_antennas: 4
+  noise_power: 1.0e-3
+  transmit_power: 1.0
+  rician_k: 3.0
+  phase_bits: 2
+  backend: numpy
+sweep:
+  ris_elements: [16, 32]
+  users: [2, 4]
+  error_scales: [0.16, 0.24]
+  temporal_rhos: [0.80, 0.95]
+  seeds: [601, 607, 613, 619, 631, 641]
+  episodes: 4
+  slots: 8
+  controller_kinds: [posterior_triggered, periodic_risk, always_risk, periodic_nominal]
+controller:
+  refresh_period: 3
+  uncertainty_threshold: 0.20
+  innovation_threshold: 3.0
+  min_refresh_gap: 1
+  scenario_count: 4
+  reliability_target: 0.5
+evaluation:
+  outage_quantile: 0.05
+  outage_threshold: 0.5
+  matched_candidate_budget: 128
+  bootstrap_draws: 500

@@ -1,0 +1,188 @@
+{
+  "status": "complete",
+  "backend": "python-matplotlib",
+  "style": "Nature figure contract; editable SVG/PDF; 600 dpi TIFF/PNG",
+  "script": "C:\\Users\\pengl\\Documents\\ChatGPT\\选题\\scripts\\generate_campaign_c_figures.py",
+  "input_sha256": {
+    "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis\\summary.csv": "d41b78f5e3797b5f3f4afde63e84165965342e15894bf8dc2e13dec4469118dc",
+    "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis\\paired_deltas.csv": "f374e98dc9036cff4f563737cc38436bb9818825b7c0f98408b488d6bc937f02",
+    "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis\\gate_audit.json": "183fe93ef0a93a84f063ec4fdae9fe97ab89801c4db046d22d6907a6c2e2ddfd",
+    "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis\\campaign_c_completion.json": "25fc5bcdc49130df8446c004d1fc678ad531710135c0f373ae73a2a20786a99d",
+    "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis\\baseline_freeze.json": "d5443698a0dffa00bb710c3244c730ee87ed001411cb92581743a0c8655136b9",
+    "results\\controller_shift_test_final_20261007_jetson_analysis\\gate_audit.json": "d65bcdaaec4f64187d05dbce8bd98e842446dfaeda1df91bcc32876f33ecd03e",
+    "results\\controller_shift_test_final_guard1_20261026_jetson_analysis\\gate_audit.json": "8f148f21f617dfa8a37bb5096d89ff19b530aef568eb6c8a97bc542f7b484708"
+  },
+  "figures": {
+    "figure01_protocol_provenance": {
+      "exports": {
+        "svg": {
+          "sha256": "e8b201d7acdc64f0bb83546b78ecb41c4c586a386ae19bb8a03bc2837fc9d341",
+          "bytes": 8661
+        },
+        "pdf": {
+          "sha256": "04655ca0fc5e0491c3ac530624f4c43ed08cf20c259787a36d8cfd15b02d5c24",
+          "bytes": 45879
+        },
+        "tiff": {
+          "sha256": "67df28d46e00ad56469e71fdbbb2290eda8051509f55c9107833f25b7365e5f7",
+          "bytes": 20113494
+        },
+        "png": {
+          "sha256": "7f76fae6a827f58f24f02a2c02a582e1f20e26f15301a00958272aa02350496c",
+          "bytes": 182829
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure01_protocol_provenance.alignment.json"
+    },
+    "figure02_paired_forest_always_risk": {
+      "exports": {
+        "svg": {
+          "sha256": "9b84814369497cceca9d31f61aaf0864898c007024f22d6752f2ac975156bc17",
+          "bytes": 41632
+        },
+        "pdf": {
+          "sha256": "92693010a864923fe78993ff7cc7bb15898e9560bab7e7e063f57070dd205773",
+          "bytes": 41176
+        },
+        "tiff": {
+          "sha256": "77b58cecf9b667e783e5f093c1367d911992c267f8fafd2add5e21f35b57fe9a",
+          "bytes": 41009062
+        },
+        "png": {
+          "sha256": "8820e303b5711d2e4c08eb6cc3d57467f64d240dfc51cceb60d0eae8d2843e32",
+          "bytes": 248138
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure02_paired_forest_always_risk.alignment.json"
+    },
+    "figure03_error_rho_heatmap": {
+      "exports": {
+        "svg": {
+          "sha256": "057ecdb264719a6ecb6a32b500344d932a90e8320d07b69a2ec8265d9eed8f9a",
+          "bytes": 30524
+        },
+        "pdf": {
+          "sha256": "c7c4db0df8072b387f754fde1a072bc5d13f92b0dcea03bdaa175a7e829431b0",
+          "bytes": 44300
+        },
+        "tiff": {
+          "sha256": "1117b6d36387d0addfddf97c79b606d2c650c2bf2c68ee6184c9ee98754d738e",
+          "bytes": 20063550
+        },
+        "png": {
+          "sha256": "97df263acb5f15ed8168387ed327628f6642f1ca6139c3edf1a4f1af95aac73b",
+          "bytes": 216119
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure03_error_rho_heatmap.alignment.json"
+    },
+    "figure04_absolute_outage_gate": {
+      "exports": {
+        "svg": {
+          "sha256": "0235fb255e08a416078280251fc7b4c1c8311d3e1950a332315b11f7956aac00",
+          "bytes": 39777
+        },
+        "pdf": {
+          "sha256": "d434f6e4b8cb5e9d8e267d52213355a57608285fb8a97fa069ab6f8330cadf77",
+          "bytes": 44060
+        },
+        "tiff": {
+          "sha256": "a2a91ddbb64054b3d23482156458fccf99389e95d80f5e43ee68d02c93446cf4",
+          "bytes": 18816206
+        },
+        "png": {
+          "sha256": "1b6bf044c5ca8ce5dec53065fe6d1901c602a677239ad1fa8434130795aa54a9",
+          "bytes": 319764
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure04_absolute_outage_gate.alignment.json"
+    },
+    "figure05_latency_unknown_boundary": {
+      "exports": {
+        "svg": {
+          "sha256": "744d2bfe0a08d7d611185b4428003962da46901e3ee50946a15af551e5f49e8d",
+          "bytes": 32000
+        },
+        "pdf": {
+          "sha256": "b6c046ec82c974ffa7223dadb3638849449672a29dc811fcdbc46290ae5a4576",
+          "bytes": 50523
+        },
+        "tiff": {
+          "sha256": "45a0f8a83e77b4e27d787fc7f08a7aead899bb32d685f094c0a76bf02aada644",
+          "bytes": 19378574
+        },
+        "png": {
+          "sha256": "ba0314abc5618804a2f9f0d79c298e959fd6692cabd27bf01c560b72c73fcd81",
+          "bytes": 348514
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure05_latency_unknown_boundary.alignment.json"
+    },
+    "figure06_cost_service_conditional": {
+      "exports": {
+        "svg": {
+          "sha256": "ffbf83122f1f5fffd0540a9ecc606fc42c6044fd5f2ed1491de5a446a5888ccc",
+          "bytes": 50954
+        },
+        "pdf": {
+          "sha256": "fe3e5b88103ed8b66a494564ff3a13c713d35bc86442399706626e26513cdada",
+          "bytes": 43995
+        },
+        "tiff": {
+          "sha256": "bed81f31da5565e7e73d4869ed0f959404064a98dcfa6d1937e18f01ce6c9a35",
+          "bytes": 17293258
+        },
+        "png": {
+          "sha256": "17f691a2bc3e153ecb2d8cb6b79e162f4b76901646112f1a7ee56bae2243062f",
+          "bytes": 231394
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure06_cost_service_conditional.alignment.json"
+    },
+    "figure07_freeze_protocol": {
+      "exports": {
+        "svg": {
+          "sha256": "4c3f4d3273b4d7d6c6763262f1ceb67afb5bed0bff797e4bc518549bd2ab9ca6",
+          "bytes": 14057
+        },
+        "pdf": {
+          "sha256": "6b1719ef0608637ee910dc98895474b0bbdd55296aadf425d12b5a94d3ed798e",
+          "bytes": 57417
+        },
+        "tiff": {
+          "sha256": "7380742fbab72f8843821b1d8daa5e2ab3fa2fac785f32a1c00ca6eea3bc7492",
+          "bytes": 24912686
+        },
+        "png": {
+          "sha256": "c4c39abc396792d30e62b3d4d170e99cfe1ad3920fd17fd4a89cc5ade5dcbc7d",
+          "bytes": 272153
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure07_freeze_protocol.alignment.json"
+    },
+    "figure08_campaign_boundary": {
+      "exports": {
+        "svg": {
+          "sha256": "96f93e87032fe24a1a502be0b0d7f8739b41d6634134c491e81e628454346ceb",
+          "bytes": 26373
+        },
+        "pdf": {
+          "sha256": "ec9ae814d28f58533da98b6540178e2539c3505b71df23a26814a6e5e55e5e70",
+          "bytes": 45727
+        },
+        "tiff": {
+          "sha256": "b74683f99ce2829b64ae3d950888d2e3a1fa1f0b02d1557d2d66e8bc1450ba32",
+          "bytes": 30171886
+        },
+        "png": {
+          "sha256": "adaaba9b54709c27f868f72759702911023457d4d24521e20f9a38eb8f802683",
+          "bytes": 219354
+        }
+      },
+      "alignment_json": "results\\figures\\campaign_c_20261007\\figure08_campaign_boundary.alignment.json"
+    }
+  },
+  "hardware_timing_status": "UNKNOWN",
+  "claim_boundary": "normalized RIS-only simulation; no OTA or physical phase-write evidence",
+  "data_exclusion": "none; all rows in the supplied summary and paired-delta artifacts were retained"
+}

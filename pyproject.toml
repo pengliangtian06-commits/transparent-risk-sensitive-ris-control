@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rislab"
+version = "0.1.0"
+description = "Reproducible robust RIS optimization experiments"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "PyYAML>=6.0", "scipy>=1.11"]
+
+[project.optional-dependencies]
+research = ["pytest>=8", "matplotlib>=3.8", "pypdf>=5"]
+
+[tool.setuptools.packages.find]
+include = ["rislab*"]

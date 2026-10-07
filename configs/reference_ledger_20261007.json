@@ -1,0 +1,168 @@
+{
+  "retrieval_date": "2026-10-07",
+  "source": "literature/REFERENCE_LEDGER_20261007.md plus literature/CORE_REVIEW_20261007.md",
+  "records": [
+    {
+      "id": "robust_meta_learning",
+      "axis": "robust_learning",
+      "evidence": "MD",
+      "doi": "10.1109/TWC.2024.3435023"
+    },
+    {
+      "id": "blockage_robust_mobile",
+      "axis": "mobility_robustness",
+      "evidence": "MD",
+      "doi": "10.1109/TWC.2024.3447895"
+    },
+    {
+      "id": "hybrid_robust_multi_ris",
+      "axis": "robust_joint_design",
+      "evidence": "FT",
+      "doi": "10.1109/TWC.2022.3222218"
+    },
+    {
+      "id": "drll_phase_urllc",
+      "axis": "learned_phase_control",
+      "evidence": "MD",
+      "doi": "10.1109/JIOT.2022.3232962"
+    },
+    {
+      "id": "robust_noma_csi",
+      "axis": "robust_noma",
+      "evidence": "MD",
+      "doi": "10.1109/TWC.2023.3283140"
+    },
+    {
+      "id": "embb_urllc_traffic",
+      "axis": "reliability",
+      "evidence": "MD",
+      "doi": "10.1109/TCOMM.2021.3127265"
+    },
+    {
+      "id": "statistical_csi_scaling",
+      "axis": "statistical_csi",
+      "evidence": "MD",
+      "doi": "10.1109/TCOMM.2022.3162580"
+    },
+    {
+      "id": "environment_codebook",
+      "axis": "codebook_complexity",
+      "evidence": "MD",
+      "doi": "10.1109/TCOMM.2024.3415619"
+    },
+    {
+      "id": "ris_isac_joint_beamforming",
+      "axis": "isac",
+      "evidence": "MD",
+      "doi": "10.1109/TCOMM.2023.3344143"
+    },
+    {
+      "id": "ris_radar_coexistence",
+      "axis": "isac_robustness",
+      "evidence": "MD",
+      "doi": "10.1109/TCOMM.2023.3298983"
+    },
+    {
+      "id": "kalman_tracking",
+      "axis": "temporal_estimation",
+      "evidence": "FT",
+      "doi": "10.1109/TWC.2023.3312426"
+    },
+    {
+      "id": "channel_tracking_prediction",
+      "axis": "temporal_prediction",
+      "evidence": "MD",
+      "doi": "10.1109/TWC.2022.3196313"
+    },
+    {
+      "id": "channel_aging_precoding",
+      "axis": "channel_aging",
+      "evidence": "MD",
+      "doi": "10.1109/TVT.2022.3210548"
+    },
+    {
+      "id": "channel_aging_statistical",
+      "axis": "channel_aging",
+      "evidence": "MD",
+      "doi": "10.1109/TVT.2022.3203796"
+    },
+    {
+      "id": "cellfree_channel_aging",
+      "axis": "cellfree_aging",
+      "evidence": "MD",
+      "doi": "10.1109/TVT.2024.3376557"
+    },
+    {
+      "id": "predictive_v2i",
+      "axis": "predictive_learning",
+      "evidence": "MD",
+      "doi": "10.1109/TWC.2023.3327362"
+    },
+    {
+      "id": "bd_ris_prediction",
+      "axis": "bd_ris_prediction",
+      "evidence": "MD",
+      "doi": "10.1109/TVT.2025.3556277"
+    },
+    {
+      "id": "event_triggered_reestimation",
+      "axis": "event_triggered_learning",
+      "evidence": "MD",
+      "doi": "10.1109/OJCOMS.2025.3642009"
+    },
+    {
+      "id": "drl_energy_satellite",
+      "axis": "learned_energy_control",
+      "evidence": "MD",
+      "doi": "10.1109/TCOMM.2024.3370618"
+    },
+    {
+      "id": "multiagent_ris_control",
+      "axis": "multiagent_control",
+      "evidence": "MD",
+      "doi": "10.1109/TVT.2024.3392883"
+    },
+    {
+      "id": "liquid_neural_robust",
+      "axis": "neural_robust_control",
+      "evidence": "MD",
+      "doi": "10.1109/LWC.2024.3436576"
+    },
+    {
+      "id": "robust_miso_bounded",
+      "axis": "bounded_uncertainty",
+      "evidence": "MD",
+      "doi": "10.1109/LWC.2020.3000490"
+    },
+    {
+      "id": "outage_robust",
+      "axis": "outage_robustness",
+      "evidence": "FT",
+      "doi": "10.1109/TSP.2021.3056899"
+    },
+    {
+      "id": "adaptive_estimation",
+      "axis": "adaptive_estimation",
+      "evidence": "MD",
+      "doi": "10.1109/ACCESS.2025.3570772"
+    },
+    {
+      "id": "active_beam_tracking",
+      "axis": "predictive_control",
+      "evidence": "MD",
+      "doi": "10.1109/ICASSP49357.2023.10097134"
+    },
+    {
+      "id": "closed_loop_mpc",
+      "axis": "predictive_control",
+      "evidence": "MD",
+      "doi": "10.1109/LWC.2026.3701340"
+    },
+    {
+      "id": "phycom_robust_secure_star",
+      "axis": "venue_scope",
+      "evidence": "MD",
+      "doi": "10.1016/j.phycom.2026.103011"
+    }
+  ]
+}

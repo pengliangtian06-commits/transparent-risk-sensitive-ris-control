@@ -1,0 +1,60 @@
+{
+  "campaign": "Campaign C",
+  "status": "complete",
+  "campaign_directory": "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson",
+  "analysis_directory": "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis",
+  "remote_recheck": {
+    "host": "192.168.55.1",
+    "user": "PLT",
+    "process_inventory": "no active controller runner, verifier, or analysis process",
+    "checked_at": "2026-10-07T20:11:25+08:00"
+  },
+  "planned_rows": 20480,
+  "completed_rows": 20480,
+  "planned_conditions": 640,
+  "summary_count": 64,
+  "paired_streams": 640,
+  "raw_summary_csv_recomputation_agree": true,
+  "source_sha256": "bb7739994c6cc1098ff43cdca7aa39ff1c81ee005707a185293b43588957f4bd",
+  "config_sha256": "903fc0a2bbb79f083251d0b905a6dcd1f43dd4986e3a2b4dab40214233f35e2b",
+  "effective_config_sha256": "60f9fc84b04fbe22a02a54353f370581e106cb80cf20a4762c482d873c2b4530",
+  "files_sha256": {
+    "manifest.json": "43193e7ea122820043998708ce0d8590a3f1d70c7fab543bf50435665b7ea22d",
+    "results.json": "b85e984ea5044cf83dd98744f617ee120ec8d0a0863abac042a97256e6b15abc",
+    "summary.csv": "26804519a777956f3446b76d6c5b3093b967e97031903fb03e55f823460d4344",
+    "raw.jsonl": "cce14b1861f8155838c480cd92b72ef6548085e3c5627a54bcab0604e92a251c"
+  },
+  "gate_audit": {
+    "absolute_weak_user_outage": "PASS",
+    "absolute_weak_user_outage_upper95_max": 0.0,
+    "always_risk_service": "PASS",
+    "always_risk_outage_delta_upper95": 0.0,
+    "always_risk_goodput_lower05": -0.0061526959772669546,
+    "always_risk_work_reduction_lower05": 0.333984375,
+    "always_risk_work_reduction": "PASS",
+    "periodic_risk_service": "PASS",
+    "periodic_risk_work_reduction": "FAIL",
+    "periodic_nominal_service": "PASS",
+    "periodic_nominal_work_reduction": "FAIL",
+    "latency": "UNKNOWN",
+    "maximum_simulated_total_latency_p95_ms": 388.08253540035366
+  },
+  "partial_interrupted_record": {
+    "directory": "results\\controller_shift_test_final_guard1_revision_4condition_partial_20261007_jetson",
+    "manifest_status": "running",
+    "completed_rows": 2450,
+    "planned_rows": 5120,
+    "included_in_analysis": false,
+    "files_sha256": {
+      "manifest.json": "88283362386dec5d021526db620b473fbf33829015a96ddcca7a3639cb25490f",
+      "progress.json": "5917333e85193b32214aaa216b81f57edf81bb2b0c5cf346d8824bd4e35f93d0",
+      "raw.jsonl": "da98cbaa53f8f7cf968c3580416716d43ce3bb5c78cbca095c51f58f8ff7cd9d"
+    },
+    "reason": "wrong four-condition development subnet; retained for interruption audit only"
+  },
+  "hardware_timing": {
+    "status": "UNKNOWN",
+    "reason": "No physical RIS phase-write completion or measured slot trace is available.",
+    "simulated_latency_is_not_substitute": true
+  }
+}

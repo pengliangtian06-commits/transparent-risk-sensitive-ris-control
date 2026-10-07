@@ -1,0 +1,42 @@
+experiment_id: controller_shift_dev_guard_per_user_scenarios8
+purpose: Development-only per-user risk guard with eight uncertainty scenarios
+base_system:
+  bs_antennas: 4
+  noise_power: 1.0e-3
+  transmit_power: 1.0
+  rician_k: 3.0
+  phase_bits: 2
+  backend: cupy
+sweep:
+  ris_elements: [16, 32]
+  users: [4]
+  error_scales: [0.28]
+  temporal_rhos: [0.70, 0.98]
+  seeds: [809, 811, 821, 823]
+  episodes: 4
+  slots: 8
+  controller_kinds: [posterior_triggered, periodic_risk, always_risk, periodic_nominal]
+controller:
+  refresh_period: 2
+  uncertainty_threshold: 0.35
+  innovation_threshold: 4.0
+  min_refresh_gap: 1
+  scenario_count: 8
+  reliability_target: 0.8
+  guard_budget: 8
+  guard_target: 1.0
+  risk_scope: per_user
+evaluation:
+  outage_quantile: 0.05
+  matched_candidate_budget: 128
+  bootstrap_draws: 10000
+  outage_threshold: 0.5
+service:
+  validation_samples: 64
+  family_delta: 0.05
+  outage_epsilon: 0.5
+  bandwidth_hz: 1000000
+  slot_seconds: 2.0
+  payload_bits_per_user: 1000000
+  deadline_ms: 2000
+  rejection_counts_as_service_violation: true

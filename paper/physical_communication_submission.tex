@@ -1,0 +1,1195 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[margin=0.72in]{geometry}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\graphicspath{{../results/figures/campaign_c_20261007/}}
+\setcounter{secnumdepth}{3}
+\setlength{\columnsep}{0.25in}
+\setlength{\tabcolsep}{3pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\captionsetup{font=small,labelfont=bf}
+\setlist{nosep,leftmargin=*}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\title{Transparent Risk-Sensitive RIS Phase Control Under CSI Uncertainty}
+\author{%
+\begin{tabular}{c}
+Pengliang Tian\textsuperscript{1}, Pengyuan Zhang\textsuperscript{1}, Haoshan Sun\textsuperscript{1}, Changjiang Zhang\textsuperscript{1,*}\\[0.35ex]
+\footnotesize \textsuperscript{1}Department of Communication and Information Engineering, Century College, Beijing University of Posts and Telecommunications, Beijing, China\\[0.35ex]
+\footnotesize First-author ORCID: 0009-0003-5941-9797; corresponding author: \href{mailto:zhangchangjiang@ccbupt.cn}{zhangchangjiang@ccbupt.cn}, ORCID: 0009-0002-9936-1377
+\end{tabular}
+}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+
+Reconfigurable intelligent surfaces (RISs) make the propagation
+environment a reconfigurable control variable, but a phase action is
+only as reliable as the channel information used to select it. We study
+a causal controller for a multi-user normalized RIS simulator in which
+channel-estimation error drifts over time. The controller constructs a
+finite, posterior-like ensemble of error scenarios, selects a quantized
+phase action using a per-user lower-tail feasibility check, and reuses
+the action until a fixed trigger requests a refresh. Candidate search,
+validation, phase quantization, refusal handling, and phase-control
+rate-evaluation cost are explicit.
+
+The frozen held-out Campaign C contains 20,480 rows over 16 factor
+conditions, ten independent seed blocks, four episodes, eight slots, and
+four controllers. Using paired bootstrap over complete seed blocks, the
+maximum one-sided 95\% upper bound for absolute weak-user outage is
+0.000; against the always-risk reference, the outage-delta upper bound
+is 0.000, the goodput relative lower 05 bound is −0.00615, and the
+phase-control rate-evaluation reduction lower 05 bound is 0.33398. These
+results support a conditional reliability--computation trade-off on the
+declared normalized simulator grid. They do not establish a calibrated
+population posterior, a learned or reinforcement-learning policy,
+physical phase-write timing, OTA performance, or universal superiority.
+The Jetson timing record is simulator diagnostic data; no RIS
+phase-write endpoint or physical slot trace was available.
+
+\end{abstract}
+
+\textbf{Keywords:} reconfigurable intelligent surface; CSI uncertainty;
+temporal correlation; phase reuse; weak-user outage; risk-aware control;
+paired seed-block evaluation.
+
+\paragraph{Highlights}
+
+\begin{itemize}
+\tightlist
+\item
+  A causal per-user guard makes RIS phase reuse and lower-tail
+  feasibility explicit.
+\item
+  A frozen 20,480-row Campaign C passes the four registered always-risk
+  simulator gates.
+\item
+  Physical phase-write timing is kept as UNKNOWN rather than inferred
+  from CUDA timing.
+\end{itemize}
+
+\section{Introduction}\label{introduction}
+
+RIS-assisted communication uses a programmable reflecting surface to
+shape the effective channel between a transmitter and one or more users
+{[}2,6,11,13{]}. The phase profile is attractive as a control variable
+because it can be changed without adding a full radio-frequency chain at
+every element. At the same time, the phase profile is selected from
+information that is neither exact nor static. Pilot noise, model
+mismatch, channel tracking, and channel aging all affect the estimate
+available at a later payload slot {[}14,22--24,27,30--32{]}. In a
+multi-user link, a phase vector that improves a mean or sum rate can
+still leave the weakest user close to an outage threshold, a concern
+addressed by robust RIS beamforming and outage-constrained designs
+{[}7,8,21,28,29{]}. The resulting engineering problem is therefore a
+sequential control problem under uncertain and correlated information
+rather than a one-shot point-estimate optimization.
+
+The most direct response to uncertainty is to refine the channel
+estimate and recompute an action frequently. Tracking, beam prediction,
+and two-timescale estimation reduce this burden in different ways
+{[}3,4,14,27,30{]}, but refinement still has a measurable cost. It can
+increase pilot and estimation work, candidate generation, rate
+evaluations, host-device transfers, and the time between the first
+available observation and the phase write used by the data slot. Reusing
+a nominal action has the opposite profile: it can be inexpensive when
+the channel is stable, but it has no explicit mechanism for deciding
+whether the uncertainty around the reused action is acceptable.
+Learning-based and reinforcement-learning controllers provide another
+design route {[}5,9,12, 19,25,31,33{]}, but their training and policy
+state make a matched causal cost audit a different estimand. A useful
+controller must expose this reliability and work trade-off instead of
+hiding it in an opaque policy or in an average rate alone.
+
+We study a transparent mechanism for this purpose. Given a current
+channel estimate, the controller forms a finite ensemble of plausible
+CSI errors. It evaluates candidate quantized RIS phase actions over that
+ensemble and keeps the candidates whose lower-tail service statistic
+passes a configured feasibility rule. A trigger compares the current
+reused action with the available uncertainty evidence and requests a
+refresh when reuse is no longer acceptable. The scenario construction,
+lower-tail check, trigger, phase quantization, refusal path, and cost
+accounting are explicit. This makes the mechanism inspectable and
+permits a matched comparison with periodic risk reuse, always-refine
+control, and periodic nominal-CSI reuse.
+
+The evidence is separated into a completed statistical campaign and a
+hardware boundary. The corrected held-out Campaign C is complete and
+hash-linked: it contains 20,480 rows, 16 factor conditions, 64 condition
+summaries, and 640 paired seed/controller streams. The four primary
+statistical thresholds were frozen before the held-out seeds were
+inspected. All four pass against the always-risk reference. Comparisons
+with periodic-risk and periodic-nominal baselines retain their service
+results but fail the all-condition work-reduction gate because those
+baselines use different refresh schedules; this is reported as a
+sensitivity result rather than silently reclassified as a success. The
+first erroneous launch remains a 2,450/5,120-row interrupted artifact
+and is excluded from inference.
+
+The physical timing claim is intentionally unresolved. The Jetson
+exposes generic SPI/GPIO device nodes but no detected RIS controller or
+phase-commit endpoint. Consequently, the simulated total-latency P95
+(maximum 388.083 ms) is a diagnostic for algorithmic cost only. It is
+not a phase-write completion measurement and cannot be compared with a
+physical slot. The manuscript uses the results as a normalized RIS-only
+simulation study and keeps OTA, real-time, deployment, and
+calibrated-population language outside the claim set.
+
+This study makes four bounded contributions. First, it gives an
+inspectable causal phase-reuse mechanism in which the CSI-error
+ensemble, lower-tail rule, guard, trigger, quantization, refusal path,
+and cost ledger are explicit. Second, it contributes a frozen
+development/held-out protocol with complete seed-block paired bootstrap
+rather than slot-level pseudo-replication. Third, it reports absolute
+all-slot weak-user service together with relative goodput and online
+work, making refused or failed actions visible in the denominator.
+Fourth, it preserves a clean evidence boundary: the statistical gates
+are closed for the declared simulator grid, while physical phase-write
+timing and deployment evidence remain unknown. No individual ingredient
+is presented as new without the final full-text literature comparison.
+
+The controller and provenance path are summarized in Figure 1.
+
+\section{System Model}\label{system-model}
+
+\subsection{Multi-user RIS link}\label{multi-user-ris-link}
+
+Consider a transmitter with a fixed set of antennas serving a set of
+users through a programmable RIS path. Let the RIS contain \(N\)
+elements and let its phase vector be
+\(\boldsymbol{\phi}=[\phi_1,\ldots,\phi_N]^\mathsf{T}\). Each phase
+belongs to the configured discrete alphabet. The effective channel for
+user \(u\) is the normalized cascaded transmitter-RIS-user contribution.
+The simulator uses normalized channel coefficients and a versioned
+configuration for path gains, noise, transmit power, pilot observations,
+and the phase alphabet. These quantities define a controlled evaluation
+environment; they are not measurements of a particular deployed surface.
+
+For a candidate phase vector and a channel realization, the simulator
+computes a user rate from the configured signal and interference model.
+We write this quantity as \(R_u(\boldsymbol{\phi},H)\), where \(H\)
+denotes the channel state available for evaluation. The controller can
+evaluate a candidate on the nominal estimate and on a finite set of
+error-perturbed scenarios. A payload slot is successful for user \(u\)
+only when its transmitted payload is delivered and its measured or
+simulated rate meets the configured outage threshold. The weak-user
+index is a condition-level reference estimand: before forming any
+controller deltas, it is frozen as the argmin of the always-risk
+true-channel mean rate over the matched condition trace. The same index
+is then applied to all controllers. This rule is controller-independent
+but does not assert a fixed physical user identity across deployments.
+
+The action space includes the RIS phase vector and the associated commit
+or refusal decision. Candidate generation and rate evaluation are
+explicit operations. Phase quantization is applied before an action is
+committed, and the same action space is used by the triggered controller
+and every baseline. This prevents an apparent reliability or work
+advantage from arising solely from a different phase alphabet or
+stopping rule.
+
+\subsection{CSI uncertainty and temporal
+evolution}\label{csi-uncertainty-and-temporal-evolution}
+
+At decision time \(t\), the controller receives an observation-derived
+channel estimate \(\widehat H_t\). The unknown channel is represented as
+an estimate plus a structured error whose scale and temporal correlation
+are configuration factors. The error process is generated consistently
+for matched controller runs, so that a change in a controller's result
+is not caused by a different channel trace. The full campaign uses two
+recorded error scales and two recorded temporal-correlation values.
+These factors are simulation parameters within the declared grid; they
+do not establish behavior outside that grid.
+
+The controller's scenario ensemble is conditional on the current
+estimate and configured uncertainty model. It is called posterior-like
+because it provides a distribution-shaped collection of plausible errors
+for action validation. The term does not assert that the ensemble is
+calibrated to a population of physical channels. Calibration, if needed,
+would require independent channel measurements and a separate validation
+design. Posterior scenario draws are also not physical-channel repeats.
+They are nested within an action decision and remain inside the
+corresponding independent seed block for uncertainty analysis.
+
+Temporal correlation matters because action reuse spans multiple slots.
+A highly correlated process can make reuse appear efficient over a short
+window, whereas a less correlated process can invalidate the same action
+sooner. The experiment therefore records the correlation factor and
+reports condition-level patterns instead of treating slots as
+independent samples. Any inference remains conditional on the Campaign C
+held-out error/rho grid and does not extend to arbitrary shifts.
+
+\subsection{Service, goodput, and cost
+definitions}\label{service-goodput-and-cost-definitions}
+
+For a scheduled slot, define \(served_{u,t}=1\) only when a payload for
+user \(u\) is transmitted and the resulting rate meets the configured
+threshold. If the controller refuses an action, times out, produces no
+decision, fails to write the phase, or has a missing record, then
+\(served_{u,t}=0\) and the delivered payload is zero. These events
+remain in the denominator. For condition (c), the weak-user all-slot
+outage is
+
+\[
+O_w(c)=1-\frac{\sum_{e,t} served_{u^*,e,t}}{N_{slots}(c)},
+\]
+
+where \(N_{slots}(c)\) includes every scheduled slot. The target is
+\(O_w(c)\leq 0.05\) with a one-sided 95\% upper seed-block bound no
+greater than 0.05 for every condition. Campaign C closes this simulator
+gate with a maximum one-sided upper95 of 0.000; this is not a deployed
+service guarantee.
+
+Goodput is the sum of delivered payload bits. A refusal contributes zero
+bits, even if a previous action would have produced a good rate. This
+accounting prevents a controller from looking reliable by reporting only
+the slots it admitted. Relative comparisons, such as a goodput ratio or
+an outage difference against a reference, cannot waive the absolute
+target.
+
+Online work is recorded in a common ledger. Estimation and posterior
+update, candidate generation and search, action validation,
+phase-control rate evaluations, transfers and synchronization, and phase
+writing each have an explicit boundary. Initialization, including the
+first estimate, first phase construction, allocation, or compilation, is
+recorded separately and included in campaign totals. The same boundaries
+apply to the triggered controller, periodic risk reuse, always-refine
+control, and nominal-CSI reuse.
+
+\subsection{Physical timing
+boundary}\label{physical-timing-boundary}
+
+Let \(T_{slot}\) be the physical duration of the exact waveform and
+pilot schedule used by the communication testbed. Decision latency is
+measured from the first input sample available to the controller through
+completion of the phase/action write used by that slot. The interval is
+decomposed into
+
+\[
+L_{dec}=L_{est}+L_{search}+L_{validate}+L_{commit},
+\]
+
+where the final term includes host-device transfers, synchronization,
+and the phase write. The gate is \(P95[L_{dec}]\leq0.10T_{slot}\), with
+a one-sided 95\% upper bound also below the threshold and no scheduled
+slot exceeding \(T_{slot}\). A monotonic timer and accelerator-event
+synchronization are required. The simulator's \texttt{decision\_ms}
+field does not contain this physical slot definition and is diagnostic
+only. Every real-time or hardware-feasibility statement remains UNKNOWN
+until a physical phase-write and slot trace are measured.
+
+\section{Method}\label{method}
+
+\subsection{Scenario ensemble}\label{scenario-ensemble}
+
+The controller begins with the current estimate and the configured
+CSI-error model. It generates a finite ensemble of error scenarios and
+combines each scenario with the estimate to obtain a plausible channel
+state. The ensemble is generated from controller inputs and configured
+uncertainty; future truth is not used to construct it. The number of
+scenarios, randomization seed, and error scale are recorded in the
+effective configuration. Scenario generation is part of
+estimation/posterior work in the cost ledger.
+
+For each candidate phase vector, the controller computes the user-rate
+statistics over the scenario ensemble. A lower-tail statistic is used to
+represent weak-user risk. A candidate is feasible only if its configured
+lower-tail service criterion passes. Among feasible candidates, the
+controller applies a deterministic objective and tie-break order. If no
+candidate passes, the action is refused or the configured fallback is
+applied and logged. The fallback cannot silently remove a service
+failure from the all-slot denominator.
+
+The finite ensemble is a decision device rather than a claim of an exact
+chance constraint. Its reliability interpretation is conditional on the
+scenario model, candidate budget, and simulator. A future physical study
+would need to calibrate the uncertainty model and validate the
+lower-tail criterion with measured channels. That work is outside the
+current evidence.
+
+\subsection{Trigger and action
+reuse}\label{trigger-and-action-reuse}
+
+After a phase action is committed, the controller may reuse it for later
+slots. The trigger examines the new observation and the current ensemble
+evidence. If the action remains feasible under the lower-tail rule,
+reuse avoids a full refresh. If the evidence crosses the configured
+trigger boundary, the controller generates and validates a new candidate
+set. The trigger state, initial action, refresh decision, and commit or
+refusal reason are recorded for each slot.
+
+Refresh work is not assumed to save pilots or transfers. The ledger
+records estimation, search, validation, rate evaluations, and commit
+work when they occur, including the first action. A lower refresh count
+can therefore be interpreted only together with measured rate-evaluation
+and service outcomes. The trigger does not learn a policy from held-out
+traces; it applies the versioned deterministic rule in the effective
+configuration.
+
+\subsection{Baselines and matched action
+accounting}\label{baselines-and-matched-action-accounting}
+
+The comparison includes posterior-triggered control, periodic risk
+reuse, always-refine control, and periodic nominal-CSI reuse. All
+controllers use the same candidate/action space, phase quantization,
+pilot budget, outage threshold, and stopping rules. Always-refine
+recomputes the configured risk-aware action at each scheduled refresh.
+Periodic risk reuse refreshes on a fixed period with a frozen risk
+margin. Periodic nominal reuse starts from a fixed nominal-CSI action
+and refreshes on a fixed period. Initialization is identical in
+accounting, even when the controller later reuses an action.
+
+Baseline periods, risk margins, initial actions, and tie-break rules
+must be tuned on a development seed set disjoint from held-out
+evaluation. The selection rule first requires the upper weak-user outage
+bound to satisfy the absolute target, then chooses the highest all-slot
+goodput, breaking ties by lower rate-evaluation count and lower P95
+latency. A frozen manifest records the selected settings before any
+held-out shift seed is read. Existing settings must not be described as
+optimal until this protocol is complete.
+
+\subsection{Implementation and
+reproducibility}\label{implementation-and-reproducibility}
+
+The implementation exposes source, configuration, effective
+configuration, random seed, raw row, summary, and analysis hashes. The
+phase quantization and action accounting are verified by unit tests and
+raw recomputation. A backend parity check compares the recorded NumPy
+and CuPy paths under the same host inputs; parity is an implementation
+check, not a deployment or acceleration claim. Every Python entry point
+accepts an explicit seed. Configurations live under \path{configs/},
+and result manifests identify the configuration hash.
+
+The method is therefore inspectable at three levels: the algorithm code
+and unit tests, the per-slot records and action reasons, and the paired
+analysis that reconstructs condition-level comparisons. A missing
+artifact is not replaced by a plotted estimate. The figure plan and
+evidence matrix define the status of each claim before any caption is
+finalized.
+
+\subsection{Causal state update and guard
+decision}\label{causal-state-update-and-guard-decision}
+
+The temporal state is an augmented complex Gaussian belief over a latent
+cascaded channel and its estimation error. At the first slot, the
+observed coefficient power initializes the channel and error covariance
+using the configured relative error scale. At later slots, the error
+covariance is propagated with the configured AR(1) coefficient \(\rho\),
+while the channel state follows its declared stationary transition. The
+update consumes only the current observation and declared covariance
+metadata. The simulator truth and future error realization are never
+passed to the controller. The normalized innovation statistic and
+relative posterior uncertainty are emitted as audit fields and are used
+by the trigger.
+
+On a refresh, the posterior mean supplies the decision-side channel
+estimate. The scenario scale is the clipped product of posterior
+uncertainty and the frozen inflation factor 1.5. Four scenarios are used
+by the full candidate search in Campaign C. The optimizer evaluates the
+same 2-bit phase alphabet for every controller, keeps a candidate only
+if the configured lower-tail per-user target passes, and applies
+deterministic tie-breaking to the expected sum-rate objective. The
+chosen phase vector is quantized before it is stored in the action
+record. The selected action therefore has an explicit provenance from
+observation, posterior state, candidate budget, and quantized phase.
+
+Between refreshes, the retained phase vector is checked by a causal
+one-scenario guard. In the frozen guard1 revision, the guard budget and
+guard scenario count are both one, with the same per-user target and the
+same inflated uncertainty scale as the full search. A passing guard
+consumes only its recorded guard evaluation and keeps the action. A
+failed guard immediately invokes the full four-scenario refresh; the row
+records both the failed guard and the resulting full-refresh work. This
+separation makes the work reduction auditable and prevents a cheap guard
+from silently changing the phase vector without a logged refresh.
+
+The trigger also enforces a minimum refresh gap and a periodic refresh
+horizon. The selected held-out policy has a refresh period of four
+slots, an uncertainty threshold of 0.35, an innovation threshold of 4.0,
+and no adaptive guard escalation. These values were frozen from the
+development split. Adaptive guard code is tested and retained as a
+development candidate, but it is not the Campaign C policy; this avoids
+choosing a more favorable trigger after reading held-out rows.
+
+\subsection{Action, service, and work
+records}\label{action-service-and-work-records}
+
+Each raw row identifies RIS size, user count, error scale, temporal
+correlation, seed, episode, slot, controller, and a stream hash. It
+stores the selected phase vector, per-user rates, weakest-user index,
+outage/service flags, refresh and trigger reasons, posterior
+uncertainty, normalized innovation, reuse age, candidate count, rate
+evaluations, guard evaluations, unused budget, and timing components.
+The row also carries source, configuration, effective configuration,
+base-seed, and backend metadata. These fields allow a verifier to
+recompute the summary without relying on a plot or a manually
+transcribed number.
+
+The cost ledger distinguishes phase-control rate evaluations from
+simulator truth evaluation. The latter is used to score an action after
+the decision and is excluded from the controller's online work metric.
+Initialization is kept in the stream rather than amortized away. For
+each baseline, the same action space and phase quantizer are used, and
+the same service denominator is applied. This matters because a periodic
+baseline can look cheap or expensive solely because it refreshes on a
+different schedule. The primary work comparison is therefore registered
+against always-risk, whose full risk action is recomputed at each
+scheduled refresh; periodic results are shown as sensitivity checks.
+
+The analysis code first validates row uniqueness and condition
+completeness, then aggregates within seed blocks, forms paired
+controller deltas, and only then applies the bootstrap. The result is a
+reproducible chain from raw slot record to condition-level interval. No
+posterior scenario draw is promoted to an independent sample, and no
+slot is counted as a separate seed replicate.
+
+\subsection{Estimands and uncertainty
+reporting}\label{estimands-and-uncertainty-reporting}
+
+The primary absolute estimand is the weak-user all-slot outage for one
+condition and controller, defined as the number of weak-user service
+failures over every scheduled slot. The reported point estimate is
+obtained after within-seed aggregation, and the uncertainty interval
+resamples complete seed blocks. This preserves the temporal and episode
+structure of a block. A zero observed failure count is not interpreted
+as a proof of zero population risk; it simply produces the recorded
+one-sided bootstrap bound for the registered finite campaign. The
+weak-user index is not selected separately for each controller: for each
+factor condition, it is the argmin of the always-risk true-channel mean
+rate over the matched condition trace, frozen before paired deltas are
+formed. This defines a reproducible condition-level reference estimand,
+rather than a fixed physical user identity.
+
+For a target controller and a baseline on the same stream, the outage
+delta is the target outage minus the baseline outage. Goodput relative
+delta is computed with the baseline goodput as the denominator, with
+zero-denominator cases recorded explicitly. The rate-evaluation
+reduction is one minus the target phase-control evaluation count divided
+by the matched baseline count. All three quantities are formed at the
+seed-block level before the paired bootstrap, so the comparison retains
+common channel and observation realizations. The primary reference is
+always-risk because its full risk action is recomputed at each scheduled
+refresh and supplies a stable high-work denominator.
+
+The one-sided limits are the 95th or 5th percentile of the recorded
+bootstrap distribution, as appropriate. The analysis seed, bootstrap
+draw count, input hashes, and effective configuration hash are written
+beside every summary and paired row. The 10,000 draws improve numerical
+resolution of the reported finite-sample resampling distribution, but
+they do not create additional independent channel blocks. Independent
+evidence comes only from the ten predeclared held-out seeds.
+
+As a non-selection sensitivity audit, the release also reports a
+one-sided Clopper--Pearson bound for the weak-user failure count over
+the scheduled slots. This exact bound is not substituted for the
+registered seed-block bootstrap gate and does not create additional
+independent samples; it provides a conservative finite-sample check for
+the zero-failure boundary case.
+
+Power planning was performed on the development blocks before Campaign
+C. The held-out run therefore used exactly ten independent blocks, four
+episodes, and eight slots per episode. It was not stopped when a
+threshold first appeared to pass, and no seed was replaced after
+inspecting a result. The interrupted four-condition launch is kept
+separate to make this stopping rule auditable.
+
+The analysis distinguishes three kinds of zero. A zero outage can mean
+that no failure was observed in the recorded slots; a zero work delta
+can mean equal matched counts; and a missing physical timing value means
+that no measurement exists. Only the first two are numeric simulator
+outcomes. The third is represented as UNKNOWN in the audit and in the
+latency figure, never as zero.
+
+These estimands also constrain the prose. A condition-level PASS means
+that the bound is below the registered threshold on that cell. It does
+not imply a simultaneous population guarantee outside the factor grid. A
+pooled mean is shown only for visualization and cannot override a
+failing or unknown cell. This rule is applied to the periodic-baseline
+cost failure and to the absent hardware trace.
+
+\section{Protocol}\label{protocol}
+
+\subsection{Frozen held-out Campaign
+C}\label{frozen-held-out-campaign-c}
+
+The corrected held-out campaign uses RIS sizes 16 and 32, user counts 2
+and 4, error scales 0.12 and 0.28, and temporal correlations 0.70 and
+0.98. Ten held-out seed blocks (1103, 1109, 1117, 1123, 1129, 1151,
+1153, 1163, 1171, 1181) are disjoint from the four development blocks
+(809, 811, 821, 823). Each condition-controller-seed stream contains
+four episodes and eight slots. The four controllers are
+posterior-triggered guard1 revision, periodic risk, always risk, and
+periodic nominal reuse. This gives 640 streams and 20,480 rows. The
+manifest classifies the run as \texttt{simulation\_only} and records the
+source, configuration, and effective-configuration hashes.
+
+The corrected run has zero missing or duplicate rows. Raw JSONL, JSON
+summary, and CSV summary recomputation agree, and all paired comparisons
+use matched seed, episode, and slot streams. These checks establish
+reproducibility of the declared simulator; they do not turn simulator
+rows into independent physical experiments.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../results/figures/campaign_c_20261007/figure01_protocol_provenance.pdf}
+\caption{Protocol and provenance for the normalized RIS-only simulation. The panels enumerate the 16 error/rho and system-size conditions, the four matched controllers, the 20,480 scheduled rows, and the source/configuration hashes used for Campaign C. The \texttt{simulation\_only} label is a scope boundary: the diagram contains no measured RF waveform, phase-write completion, or physical slot timing.}\label{fig:campaign-01}
+\end{figure*}
+
+\subsection{Statistical unit and paired
+analysis}\label{statistical-unit-and-paired-analysis}
+
+The independent analysis unit is a complete seed block. A block contains
+all episodes and slots generated from one seed. Paired deltas are formed
+within a condition and seed block before resampling. The analysis uses
+seed 20261031 and 10,000 bootstrap draws. Slots remain nested
+observations and are never treated as independent channel replicates.
+The same rule is used for outage, goodput, rate evaluations, refresh
+frequency, and timing diagnostics.
+
+\subsection{Absolute service gate}\label{absolute-service-gate}
+
+Every scheduled slot remains in the denominator. A refusal, timeout,
+missing decision, failed delivery, or failed phase write is one service
+violation and zero delivered payload. The corrected Campaign C records
+the resulting all-slot weak-user service metrics for every condition.
+The maximum one-sided 95\% seed-block upper bound is 0.000, below the
+frozen 0.05 threshold. This is an achieved result for the declared
+normalized simulator, not a deployed service guarantee.
+
+The corresponding all-slot service result is reported in Figure 4.
+
+\subsection{Physical latency
+boundary}\label{physical-latency-boundary}
+
+The physical test would require a testbed-provided slot duration,
+monotonic timestamps from the first available input through phase-write
+completion, component decomposition, transfer timing, and an overrun
+count. The present Jetson run has none of these physical records. Its
+total-latency P95 is a simulator diagnostic and is reported without a
+\texttt{0.10*T\_slot} threshold. The physical timing status is therefore
+UNKNOWN and no hardware real-time claim is made.
+
+The corresponding latency diagnostic is reported in Figure 5.
+
+\subsection{Cost and baseline
+freeze}\label{cost-and-baseline-freeze}
+
+The ledger counts scenario construction, candidate search, validation,
+and phase-control rate evaluations under the same accounting boundary.
+The development selection rule chose the lowest-cost candidate
+satisfying every primary development gate; the manifest was frozen
+before the ten held-out blocks were read. The primary cost reference is
+always-risk, as declared in the freeze file. Periodic-risk and
+periodic-nominal comparisons are retained for context, but their
+different refresh schedules make them unsuitable for the same 20\%
+lower-bound cost assertion.
+
+The cost and freeze outputs are reported in Figures 6 and 7.
+
+\subsection{Independent held-out error/rho
+grid}\label{independent-held-out-errorrho-grid}
+
+Campaign C is the independent held-out error/rho grid. Its policy,
+thresholds, seed list, candidate budget, and stopping rule were frozen
+before evaluation. The resulting conditional comparison is valid for the
+declared grid and matched simulator streams. It is not evidence of
+universal distribution-shift robustness, mobility performance, or
+calibrated uncertainty coverage outside the specified error scales and
+temporal correlations.
+
+The preserved campaign boundary is reported in Figure 8.
+
+\section{Results}\label{results}
+
+\subsection{Campaign integrity and
+provenance}\label{campaign-integrity-and-provenance}
+
+Campaign C completed on the Jetson with 20,480 of 20,480 planned rows.
+The remote manifest and progress record both state \texttt{complete}; a
+read-only process inventory found no active runner or verifier after
+completion. The verifier reports 16 factor conditions, 64 summaries, 640
+paired streams, and agreement between raw, JSON, and CSV recomputation.
+The source SHA-256 is
+\texttt{bb773999\allowbreak{}4c6cc109\allowbreak{}8ff43cdc\allowbreak{}a7aa39ff\allowbreak{}1c81ee00\allowbreak{}5707a185\allowbreak{}293b4358\allowbreak{}8957f4bd};
+the configuration and effective-configuration hashes are recorded in the
+manifest and completion receipt. The first wrong-subnet launch remains a
+separate 2,450/5,120-row \texttt{running} artifact with no active
+process and is explicitly excluded.
+
+These records establish an auditable normalized simulation artifact.
+They do not measure OTA propagation, payload errors on a physical radio,
+phase-write completion, or a physical slot.
+
+\subsection{Conditional controller
+comparison}\label{conditional-controller-comparison}
+
+Against always-risk, the posterior-triggered guard1 revision has a
+maximum one-sided outage-delta upper bound of 0.000, a minimum goodput
+relative lower 05 bound of −0.00615, and a minimum phase-control
+rate-evaluation reduction lower 05 bound of 0.33398. The absolute
+weak-user outage upper bound is 0.000 over the 16 conditions. Thus the
+four frozen statistical gates pass on the declared Campaign C grid.
+
+The result is a conditional trade-off, not dominance. Against
+periodic-risk and periodic-nominal, service guardrails pass but the
+work-reduction lower bound is negative in at least one condition. Those
+baselines refresh on different schedules, so their work results are
+retained as sensitivity evidence and are not used to revise the primary
+always-risk gate after the held-out data.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../results/figures/campaign_c_20261007/figure02_paired_forest_always_risk.pdf}
+\caption{Condition-level paired differences between posterior-triggered control and the always-risk reference. Each point is a condition-level estimate and each interval is obtained by resampling complete independent seed blocks (10,000 paired bootstrap draws); slots and episodes remain nested inside a block. The dashed lines are the preregistered outage, goodput, and rate-evaluation gates, not fitted confidence targets.}\label{fig:campaign-02}
+\end{figure*}
+
+\subsection{Error and temporal-factor
+patterns}\label{error-and-temporal-factor-patterns}
+
+The 16 condition cells separate error scale, temporal correlation, RIS
+size, and user count. The heatmap reports the posterior controller's
+phase-control rate evaluations, while the paired file reports the
+matched reductions and goodput deltas. This separation shows where reuse
+changes online work without collapsing the factor grid into a favorable
+pooled mean. The pattern is a description of the normalized simulator;
+it is not a causal estimate of a physical mobility process and does not
+license interpolation beyond the declared error/rho cells.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/campaign_c_20261007/figure03_error_rho_heatmap.pdf}
+\caption{Posterior-triggered phase-control rate evaluations across the declared CSI-error scale and temporal-correlation grid. Each cell is the recorded online work count in the normalized simulator for one system-size and user-count condition; the annotations are counts, and the colorbar is a shared scale across all panels. Truth evaluation and physical phase writes are outside this online-work metric.}\label{fig:campaign-03}
+\end{figure}
+
+\subsection{Absolute weak-user
+service}\label{absolute-weak-user-service}
+
+The absolute service gate is closed for Campaign C. Every scheduled slot
+is counted, and the maximum one-sided upper95 weak-user outage for the
+posterior-triggered controller is 0.000. The service-violation field
+remains available in the raw rows; its highest condition-level one-sided
+95\% upper bound is 0.009375. As a conservative finite-sample
+sensitivity, the attached Clopper--Pearson audit gives a maximum
+weak-user upper bound of 0.009318 when the zero-failure condition cells
+are treated as 320 scheduled weak-user slots; this audit does not
+replace the registered seed-block bootstrap. The accounting includes any
+refused or failed delivery rather than conditioning on admitted actions.
+The safe statement is that the declared simulator campaign passed the
+bound; it is not that a physical communication system is guaranteed to
+meet 5\% outage.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/campaign_c_20261007/figure04_absolute_outage_gate.pdf}
+\caption{All-slot weak-user outage and service-violation diagnostics on the declared 16-condition Campaign C grid. Points are condition-level rates; whiskers are the registered one-sided seed-block upper95 bounds, with every scheduled slot retained in the denominator. The 0.05 line is the frozen absolute-outage gate, and a refusal, timeout, missing decision, or failed delivery is counted as a service failure rather than removed.}\label{fig:campaign-04}
+\end{figure}
+
+\subsection{Physical decision
+latency}\label{physical-decision-latency}
+
+The maximum posterior-triggered simulated total-latency P95 is 388.083
+ms. This value includes the in-controller simulator timing scope
+recorded in the manifest, but it does not include a physical RIS
+transfer or phase-write completion. Because no physical \texttt{T\_slot}
+or phase-commit trace exists, the latency gate is UNKNOWN. The paper
+makes no statement about 10\%-of-slot feasibility, hardware real time,
+or OTA operation.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/campaign_c_20261007/figure05_latency_unknown_boundary.pdf}
+\caption{Simulator timing components and the physical-evidence boundary. The plotted distributions are diagnostic wall-clock measurements from the Jetson execution path, summarized over the declared condition and controller records. They do not include a measured RIS phase-write completion or a physical slot duration; consequently no hardware-real-time threshold is drawn and the physical timing status remains UNKNOWN.}\label{fig:campaign-05}
+\end{figure}
+
+\subsection{Online work and conditional Pareto
+interpretation}\label{online-work-and-conditional-pareto-interpretation}
+
+The primary comparison shows a 0.33398 lower05 reduction in
+phase-control rate evaluations versus always-risk while staying within
+the declared outage and goodput bounds. This is a matched phase-control
+evaluation result, not a total deployment-cost claim: physical transfer,
+synchronization, and phase-write costs are unmeasured. The periodic
+baseline failures illustrate why the cost denominator must be fixed
+before interpreting reuse savings.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/campaign_c_20261007/figure06_cost_service_conditional.pdf}
+\caption{Conditional online-work and service view for the four matched controllers. Points and intervals use the same seed-block uncertainty unit as Figure 2. Always-risk is the preregistered primary cost reference; periodic risk and periodic nominal reuse are retained as sensitivity comparisons, whose different refresh schedules leave their all-condition work gate failed.}\label{fig:campaign-06}
+\end{figure}
+
+\subsection{Baseline fairness and tuning
+freeze}\label{baseline-fairness-and-tuning-freeze}
+
+The development analysis compared guard1, guard2, and adaptive
+candidates on four development conditions. Guard1 revision was selected
+because it passed the frozen service gates and had the largest work
+reduction among passing candidates. The held-out seeds were disjoint and
+the freeze file records the selection rule, thresholds, and hashes
+before Campaign C. No held-out result was used to change the policy or
+threshold.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/campaign_c_20261007/figure07_freeze_protocol.pdf}
+\caption{Freeze protocol separating development selection from held-out evaluation. Guard-1 revision selection uses disjoint development blocks; the held-out Campaign C blocks are read only after the policy, thresholds, seed lists, and source/configuration hashes are frozen. The ledger records all rows, failures, and analysis seeds needed to reproduce the reported intervals.}\label{fig:campaign-07}
+\end{figure}
+
+\subsection{Independent held-out error/rho
+result}\label{independent-held-out-errorrho-result}
+
+Campaign C supplies the independent held-out result that was missing
+from the earlier draft. It supports the four conditional simulator
+statements in Section 5.2. It does not support a claim of generalization
+to arbitrary error distributions, mobility, hardware channels, or unseen
+phase interfaces. The first partial launch is shown only as a preserved
+failure record.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../results/figures/campaign_c_20261007/figure08_campaign_boundary.pdf}
+\caption{Preserved Campaign A/B history and the corrected held-out Campaign C release boundary. A and B remain historical records, while C is the 20,480-row frozen evaluation used for the primary simulator gates. The periodic-baseline work failure and the absence of physical phase-write/slot timing remain visible as evidence boundaries rather than being relabelled as successes.}\label{fig:campaign-08}
+\end{figure*}
+
+\subsection{Tables and reproducibility
+records}\label{tables-and-reproducibility-records}
+
+Table 1 defines the normalized link and CSI assumptions. Table 2 defines
+all-slot service accounting. Table 3 separates simulator timing from
+physical timing. Table 4 lists the frozen configuration and source
+hashes. Table 5 reports seed-block paired intervals. Table 6 is the
+release ledger, with physical phase-write timing marked UNKNOWN rather
+than imputed from simulator wall time. All figures are generated from
+the CSV/JSON artifacts and have the provenance manifest
+\path{results/figures/campaign_c_20261007/figure_provenance.json}.
+The exact zero-failure audit is stored at
+\path{results/controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis/exact_outage_sensitivity.json}.
+
+
+\begin{table}[t]
+\caption{Normalized simulator and CSI settings.}
+\label{tab:settings}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l l X@{}}
+\toprule
+Quantity & Frozen setting & Evidence boundary \\
+\midrule
+RIS elements & 16, 32 & normalized simulator input \\
+Users & 2, 4 & matched multi-user streams \\
+Phase alphabet & 2-bit & discrete action space \\
+Error scale & 0.12, 0.28 & simulated estimation error \\
+Temporal correlation & 0.70, 0.98 & AR(1) simulator factor \\
+Scenario ensemble & 4; guard 1 & decision surrogate, not calibrated posterior \\
+Direct BS--user path & omitted & no physical channel claim \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[t]
+\caption{All-slot service and online-work accounting.}
+\label{tab:accounting}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l X@{}}
+\toprule
+Record & Rule \\
+\midrule
+Scheduled slot & always remains in the denominator \\
+Refusal, timeout or failed delivery & zero payload and one service violation \\
+Weak-user outage & condition-level reference user, all scheduled slots \\
+Primary work metric & phase-control rate evaluations \\
+Truth evaluation & scores an action; excluded from online controller work \\
+Initialization & recorded in campaign totals, not silently amortized \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[t]
+\caption{Timing evidence boundary.}
+\label{tab:timing}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l X@{}}
+\toprule
+Quantity & Status in Campaign C \\
+\midrule
+Estimator/search/validation timing & simulator diagnostic \\
+Transfer and synchronization & not a physical measurement \\
+RIS phase-write completion & UNKNOWN; no endpoint detected \\
+Physical $T_{\mathrm{slot}}$ and overruns & UNKNOWN; no slot trace \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[t]
+\caption{Frozen Campaign C protocol and hashes.}
+\label{tab:protocol}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l X@{}}
+\toprule
+Item & Value \\
+\midrule
+Rows / conditions / streams & 20,480 / 16 / 640 \\
+Seed blocks & 10 held-out; 4 development \\
+Episodes / slots & 4 / 8 per stream \\
+Bootstrap & 10,000 draws; seed 20261031 \\
+Source SHA-256 & \texttt{bb773999...57f4bd} \\
+Configuration SHA-256 & \texttt{903fc0a2...f35e2b} \\
+Effective-config SHA-256 & \texttt{60f9fc84...c2b4530} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[t]
+\caption{Primary paired Campaign C gate results versus always-risk.}
+\label{tab:gates}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}p{0.28\columnwidth} X p{0.14\columnwidth}@{}}
+\toprule
+Estimand & Bound & Status \\
+\midrule
+Weak-user outage & upper95 $=0.000$; target $\leq0.05$ & PASS \\
+Outage delta & upper95 $=0.000$; target $\leq0.01$ & PASS \\
+Goodput relative delta & lower05 $=-0.00615$; target $\geq-0.05$ & PASS \\
+Rate-evaluation reduction & lower05 $=0.33398$; target $\geq0.20$ & PASS \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[t]
+\caption{Release ledger and evidence boundaries.}
+\label{tab:release}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l X@{}}
+\toprule
+Item & Release status \\
+\midrule
+Always-risk statistical gates & PASS on declared normalized grid \\
+Periodic-risk / nominal work gate & FAIL; sensitivity only \\
+Exact zero-failure outage audit & diagnostic; max upper95 $=0.009318$ \\
+Physical phase-write and slot timing & UNKNOWN / NO-GO \\
+OTA and deployment feasibility & UNKNOWN / NO-GO \\
+Learned-policy superiority & not evaluated or claimed \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Discussion}\label{discussion}
+
+\subsection{Interpretation within the simulation
+scope}\label{interpretation-within-the-simulation-scope}
+
+The completed evidence supports an inspectable causal controller and a
+condition-specific reliability--computation trade-off. The scenario
+ensemble makes the uncertainty assumption visible, the lower-tail check
+makes the weak-user criterion explicit, and the trigger determines when
+refresh work is spent. The held-out analysis shows that this design can
+preserve the always-risk service reference on the declared normalized
+grid while reducing phase-control rate evaluations. It does not show
+that the controller is globally optimal or universally better.
+
+\subsection{Reliability accounting}\label{reliability-accounting}
+
+The all-slot denominator prevents a controller from appearing reliable
+by refusing difficult actions. Campaign C passes the absolute weak-user
+upper95 bound and the relative outage/goodput guardrails under this
+definition. The interpretation remains conditional because the channel,
+waveform, payload, and error model are simulated. A deployed service
+guarantee would require physical channel and payload observations under
+a separately registered sampling design.
+
+\subsection{Decision budget and physical
+realizability}\label{decision-budget-and-physical-realizability}
+
+The simulated latency diagnostic is useful for comparing code paths, but
+it is not a physical slot or a phase-write measurement. The absence of a
+RIS control board or serial endpoint is recorded as an evidence
+limitation rather than filled with a nominal interface assumption. A
+future physical test must expose the exact slot duration, monotonic
+timestamps, transfer and commit intervals, overruns, and payload/error
+outcomes before any real-time claim is made.
+
+\subsection{Independent shifts and baseline
+fairness}\label{independent-shifts-and-baseline-fairness}
+
+The held-out error/rho grid closes the registered conditional
+comparison. The result is still bounded by its factors and seed blocks.
+The periodic baseline work failures demonstrate that refresh schedules
+affect the denominator; this is why the always-risk comparison was
+frozen as the primary cost reference and the periodic results remain
+visible rather than tuned away.
+
+\subsection{Relation to prior work and
+novelty}\label{relation-to-prior-work-and-novelty}
+
+Robust RIS beamforming and outage-constrained design are established
+directions {[}7,8,21,28,29,33,34{]}. Foundational RIS models and surveys
+frame the propagation and control abstractions {[}2,6,11,13{]}, while
+temporal estimation, aging, and prediction have been studied with
+Kalman, two-timescale, and predictive mechanisms
+{[}14,22--24,26,27,30--32{]}. Event-triggered estimation, deep
+reinforcement learning, meta-learning, and closed-loop control also have
+nearby precedents {[}5,9,10,12,19,25{]}. The candidate gap is the
+narrower systems intersection of an inspectable posterior-like error
+ensemble, finite lower-tail feasibility, event-triggered phase reuse,
+and an audited reliability/rate/refresh/work ledger under a frozen
+held-out protocol. Additional practical RIS, traffic-reliability, ISAC,
+codebook, tracking, and secure STAR-RIS studies in the ledger delimit
+the neighboring application spaces {[}1,3,4,15--18,20{]}. These
+citations establish neighboring problem families; metadata-only entries
+do not support detailed algorithm claims. The present study does not
+train or evaluate a deep or reinforcement-learning policy, so it makes
+no claim of superiority over learned control. The paper must not claim
+``first,'' ``novel,'' DRL, mobility, or physical deployment based on
+this campaign.
+
+\subsection{Limitations and next
+tests}\label{limitations-and-next-tests}
+
+The normalized simulator omits direct BS--user propagation, absolute
+path loss, waveform and payload measurement, calibrated hardware timing,
+and a physical RIS controller. The finite scenario ensemble is a design
+surrogate and can miss error modes outside its inflation model. Two-bit
+actions and finite candidate budgets constrain the search. The weak-user
+metric is a condition-level reference metric defined from the matched
+always-risk trace; it should not be interpreted as a fixed user identity
+or as a population-level worst-user guarantee. The cost result covers
+phase-control rate evaluations; transfer, synchronization, and
+phase-write costs remain unmeasured. The next clean extension is a
+physical interface qualification with a registered slot trace, followed
+by a new held-out hardware campaign; it must not overwrite Campaign C or
+the preserved partial record.
+
+\subsection{Availability and audit
+trail}\label{availability-and-audit-trail}
+
+The source implementation, YAML configurations, unit tests, raw JSONL
+rows, summary CSV files, paired bootstrap records, gate audit, and
+figure provenance are retained in the project workspace. The corrected
+Campaign C completion record links every reported number to source,
+configuration, effective configuration, manifest, summary, and raw-file
+SHA-256 values. The preserved interrupted launch is stored beside the
+completed run rather than deleted, so an independent reader can
+distinguish a failed start from the final evidence. The local verifier
+reproduces row uniqueness, condition completeness, and raw/JSON/CSV
+agreement. Runtime replay is treated separately: the campaign
+environment is Jetson Python 3.12.3 with NumPy 2.5.3, whereas a Windows
+replay uses a different runtime and is not claimed as a bitwise
+execution match. This separation keeps a structural audit from being
+mistaken for a hardware or software-environment replication result.
+
+\section{Conclusion}\label{conclusion}
+
+We evaluated a transparent causal RIS phase-reuse controller for
+temporally drifting CSI estimation error. The controller combines a
+finite error-scenario ensemble, a per-user lower-tail feasibility check,
+a quantized candidate search, and an explicit refresh/reuse trigger. In
+the corrected 20,480-row Campaign C, all four frozen statistical gates
+pass against always-risk on the declared 16-condition normalized
+simulator grid: the absolute weak-user outage upper95 is 0.000, the
+outage-delta upper95 is 0.000, the goodput lower05 is −0.00615, and the
+rate-evaluation reduction lower05 is 0.33398.
+
+The result is a conditional simulation finding. Periodic baseline work
+gates remain failed and visible, the first wrong-subnet launch remains
+excluded, and physical phase-write completion, slot timing, OTA
+performance, and universal generalization remain unverified. A
+submission can therefore be framed as a reproducible normalized RIS
+control and evaluation study, but it must not claim hardware real time,
+deployment, calibrated chance constraints, learned control, or universal
+superiority.
+
+\section*{Submission statements}\label{submission-statements}
+
+\subsection*{Data and code availability}\label{data-and-code-availability}
+
+The source implementation, versioned YAML configurations, unit tests,
+raw Campaign C JSONL rows, summaries, paired bootstrap indices, gate
+audits, and figure-generation scripts are retained in the project
+workspace. The hash-linked completion record is
+\path{results/controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis/campaign_c_completion.json}.
+The raw rows are simulator-generated rather than measurements from human
+participants or a physical radio. The reproducibility archive is
+intended to be released through GitHub and Zenodo; the final public URLs
+and DOI will be inserted after those deposits are created.
+
+\subsection*{Ethics and competing interests}\label{ethics-and-competing-interests}
+
+This study uses no human participants, animals, personal data, or
+clinical records; an ethics review is therefore not applicable to the
+reported simulation. The authors declare no competing interests.
+
+\subsection*{Funding}\label{funding}
+
+The authors received no external funding for this work.
+
+\subsection*{Author contributions}\label{author-contributions}
+
+Pengliang Tian: conceptualization, methodology, software, validation,
+formal analysis, investigation, data curation, visualization, and
+writing---original draft. Pengyuan Zhang: manuscript typesetting and
+formatting. Haoshan Sun: data checking and verification. Changjiang
+Zhang: supervision and writing--- review and editing. All authors
+reviewed and approved the submitted version.
+
+\subsection*{AI-assisted work disclosure}\label{ai-assisted-work-disclosure}
+
+An AI assistant was used for code inspection, reproducibility auditing,
+figure generation scripts, and language drafting. The authors must
+verify all technical claims, citations, and final wording and should
+align this statement with the target journal's current Elsevier/Physical
+Communication policy.
+
+\section*{References}\label{references-and-verification-status}
+
+The following 34 records form the current manuscript candidate pool.
+Bibliographic identity was checked through Crossref; \texttt{FT} marks a
+local full-text reading, and \texttt{MD} marks metadata/abstract-level
+screening. Detailed claims use only records whose evidence level
+supports them. The final submission should select 30--40 entries after
+the last full-text screen, DOI deduplication, publisher-version check,
+and current CAS/SCI classification check.
+
+{[}1{]} Jialing Xu, Jianbin Xue, Han Zhang, Xiangrui Guan. Robust secure
+transmission for STAR-RIS assisted ISAC against collaborative
+eavesdropper with imperfect CSI. Physical Communication, 2026. DOI:
+10.1016/j.phycom.2026.103011. (MD) {[}2{]} Ertugrul Basar, Marco Di
+Renzo, Julien De Rosny, Merouane Debbah, Mohamed-Slim Alouini, Rui
+Zhang. Wireless Communications Through Reconfigurable Intelligent
+Surfaces. IEEE Access, 2019. DOI: 10.1109/access.2019.2935192. (MD)
+{[}3{]} Hamidreza Khaleghi, Stéphane Paquelet. Adaptive Low-Overhead
+Channel Estimation Tracking in RIS-Assisted Systems. IEEE Access, 2025.
+DOI: 10.1109/ACCESS.2025.3570772. (MD) {[}4{]} Han Han, Tao Jiang, Wei
+Yu. Active Beam Tracking with Reconfigurable Intelligent Surface. ICASSP
+2023 - 2023 IEEE International Conference on Acoustics, Speech and
+Signal Processing (ICASSP), 2023. DOI:
+10.1109/ICASSP49357.2023.10097134. (MD) {[}5{]} Ramin Hashemi, Samad
+Ali, Nurul Huda Mahmood, Matti Latva-Aho. Deep Reinforcement Learning
+for Practical Phase-Shift Optimization in RIS-Aided MISO URLLC Systems.
+IEEE Internet of Things Journal, 2023. DOI: 10.1109/JIOT.2022.3232962.
+(MD) {[}6{]} Marco Di Renzo, Alessio Zappone, Merouane Debbah,
+Mohamed-Slim Alouini, Chau Yuen, Julien de Rosny, et al.. Smart Radio
+Environments Empowered by Reconfigurable Intelligent Surfaces: How It
+Works, State of Research, and The Road Ahead. IEEE Journal on Selected
+Areas in Communications, 2020. DOI: 10.1109/jsac.2020.3007211. (MD)
+{[}7{]} Gui Zhou, Cunhua Pan, Hong Ren, Kezhi Wang, Marco Di Renzo,
+Arumugam Nallanathan. Robust Beamforming Design for Intelligent
+Reflecting Surface Aided MISO Communication Systems. IEEE Wireless
+Communications Letters, 2020. DOI: 10.1109/LWC.2020.3000490. (MD)
+{[}8{]} Hui Gao, Kai Cui, Chongwen Huang, Chau Yuen. Robust Beamforming
+for RIS-Assisted Wireless Communications With Discrete Phase Shifts.
+IEEE Wireless Communications Letters, 2021. DOI:
+10.1109/lwc.2021.3107319. (MD) {[}9{]} Xinquan Wang, Fenghao Zhu,
+Chongwen Huang, Ahmed Alhammadi, Faouzi Bader, Zhaoyang Zhang, et al..
+Robust Beamforming With Gradient-Based Liquid Neural Network. IEEE
+Wireless Communications Letters, 2024. DOI: 10.1109/LWC.2024.3436576.
+(MD) {[}10{]} Luis Carlos Mathias, Rafael Marasca Martins, Taufik Abrão.
+A Closed-Loop Model Predictive Control for Beamforming in RIS-Aided
+Communications. IEEE Wireless Communications Letters, 2026. DOI:
+10.1109/LWC.2026.3701340. (MD) {[}11{]} Xiaojun Yuan, Ying-Jun Angela
+Zhang, Yuanming Shi, Wenjing Yan, Hang Liu.
+Reconfigurable-Intelligent-Surface Empowered Wireless Communications:
+Challenges and Opportunities. IEEE Wireless Communications, 2021. DOI:
+10.1109/mwc.001.2000256. (MD) {[}12{]} Dwina Agustin Putri, Irma Zakia,
+Hendrawan Hendrawan, Robithoh Annur. Joint Curriculum-Enhanced DRL and
+Event-Triggered Channel Re-Estimation for Hybrid Beamforming in Dynamic
+mmWave Environments. IEEE Open Journal of the Communications Society,
+2025. DOI: 10.1109/OJCOMS.2025.3642009. (MD) {[}13{]} Qingqing Wu,
+Shuowen Zhang, Beixiong Zheng, Changsheng You, Rui Zhang. Intelligent
+Reflecting Surface-Aided Wireless Communications: A Tutorial. IEEE
+Transactions on Communications, 2021. DOI: 10.1109/tcomm.2021.3051897.
+(MD) {[}14{]} Chen Hu, Linglong Dai, Shuangfeng Han, Xiaoyun Wang.
+Two-Timescale Channel Estimation for Reconfigurable Intelligent Surface
+Aided Wireless Communications. IEEE Transactions on Communications,
+2021. DOI: 10.1109/tcomm.2021.3072729. (MD) {[}15{]} Mohammed
+Almekhlafi, Mohamed Amine Arfaoui, Mohamed Elhattab, Chadi Assi, Ali
+Ghrayeb. Joint Resource Allocation and Phase Shift Optimization for
+RIS-Aided eMBB/URLLC Traffic Multiplexing. IEEE Transactions on
+Communications, 2022. DOI: 10.1109/TCOMM.2021.3127265. (MD) {[}16{]}
+Kangda Zhi, Cunhua Pan, Hong Ren, Kezhi Wang. Power Scaling Law Analysis
+and Phase Shift Optimization of RIS-Aided Massive MIMO Systems With
+Statistical CSI. IEEE Transactions on Communications, 2022. DOI:
+10.1109/TCOMM.2022.3162580. (MD) {[}17{]} Mohamed Rihan, Alessio
+Zappone, Stefano Buzzi. Robust RIS-Assisted MIMO Communication-Radar
+Coexistence: Joint Beamforming and Waveform Design. IEEE Transactions on
+Communications, 2023. DOI: 10.1109/TCOMM.2023.3298983. (MD) {[}18{]}
+Yongqing Xu, Yong Li, J. Andrew Zhang, Marco Di Renzo, Tony Q. S. Quek.
+Joint Beamforming for RIS-Assisted Integrated Sensing and Communication
+Systems. IEEE Transactions on Communications, 2024. DOI:
+10.1109/TCOMM.2023.3344143. (MD) {[}19{]} Min Wu, Kefeng Guo, Xingwang
+Li, Zhi Lin, Yongpeng Wu, Theodoros A. Tsiftsis, et al.. Deep
+Reinforcement Learning-Based Energy Efficiency Optimization for
+RIS-Aided Integrated Satellite-Aerial-Terrestrial Relay Networks. IEEE
+Transactions on Communications, 2024. DOI: 10.1109/TCOMM.2024.3370618.
+(MD) {[}20{]} Zhiheng Yu, Jiancheng An, Ertugrul Basar, Lu Gan, Chau
+Yuen. Environment-Aware Codebook Design for RIS-Assisted MU-MISO
+Communications: Implementation and Performance Analysis. IEEE
+Transactions on Communications, 2024. DOI: 10.1109/TCOMM.2024.3415619.
+(MD) {[}21{]} Ming-Min Zhao, An Liu, Rui Zhang. Outage-Constrained
+Robust Beamforming for Intelligent Reflecting Surface Aided Wireless
+Communication. IEEE Transactions on Signal Processing, 2021. DOI:
+10.1109/TSP.2021.3056899. (FT) {[}22{]} Anastasios Papazafeiropoulos,
+Ioannis Krikidis, Pandelis Kourtessis. Impact of Channel Aging on
+Reconfigurable Intelligent Surface Aided Massive MIMO Systems With
+Statistical CSI. IEEE Transactions on Vehicular Technology, 2023. DOI:
+10.1109/TVT.2022.3203796. (MD) {[}23{]} Yan Zhang, Jiayi Zhang, Huahua
+Xiao, Derrick Wing Kwan Ng, Bo Ai. Channel Aging-Aware Precoding for
+RIS-Aided Multi-User Communications. IEEE Transactions on Vehicular
+Technology, 2023. DOI: 10.1109/TVT.2022.3210548. (MD) {[}24{]} Enyu Shi,
+Jiayi Zhang, Jiakang Zheng, Bo Ai, Derrick Wing Kwan Ng. RIS-Aided
+Cell-Free Massive MIMO Systems With Channel Aging. IEEE Transactions on
+Vehicular Technology, 2024. DOI: 10.1109/TVT.2024.3376557. (MD) {[}25{]}
+Yiyang Zhu, Enyu Shi, Ziheng Liu, Jiayi Zhang, Bo Ai. Multi-Agent
+Reinforcement Learning-Based Joint Precoding and Phase Shift
+Optimization for RIS-Aided Cell-Free Massive MIMO Systems. IEEE
+Transactions on Vehicular Technology, 2024. DOI:
+10.1109/TVT.2024.3392883. (MD) {[}26{]} Nipuni Ginige, Arthur Sousa de
+Sena, Nurul Huda Mahmood, Nandana Rajatheva, Matti Latva-Aho. Efficient
+Channel Prediction for Beyond Diagonal RIS-Assisted MIMO Systems With
+Channel Aging. IEEE Transactions on Vehicular Technology, 2025. DOI:
+10.1109/TVT.2025.3556277. (MD) {[}27{]} Yi Wei, Ming-Min Zhao, An Liu,
+Min-Jian Zhao. Channel Tracking and Prediction for IRS-Aided Wireless
+Communications. IEEE Transactions on Wireless Communications, 2023. DOI:
+10.1109/TWC.2022.3196313. (MD) {[}28{]} Zhen Chen, Jie Tang, Xiu Yin
+Zhang, Qingqing Wu, Gaojie Chen, Kai-Kit Wong. Robust Hybrid Beamforming
+Design for Multi-RIS Assisted MIMO System With Imperfect CSI. IEEE
+Transactions on Wireless Communications, 2023. DOI:
+10.1109/TWC.2022.3222218. (FT) {[}29{]} Yasaman Omid, S. M. Mahdi
+Shahabi, Cunhua Pan, Yansha Deng, Arumugam Nallanathan. Robust
+Beamforming Design for an IRS-Aided NOMA Communication System With CSI
+Uncertainty. IEEE Transactions on Wireless Communications, 2024. DOI:
+10.1109/TWC.2023.3283140. (MD) {[}30{]} Danyang Yu, Gan Zheng, Arman
+Shojaeifard, Sangarapillai Lambotharan, Yi Liu. Kalman Filter Based
+Channel Tracking for RIS-Assisted Multi-User Networks. IEEE Transactions
+on Wireless Communications, 2024. DOI: 10.1109/TWC.2023.3312426. (FT)
+{[}31{]} Fanghao Xia, Zesong Fei, Jingxuan Huang, Xinyi Wang, Ruixiang
+Wang, Weijie Yuan, et al.. Sensing-Enabled Predictive Beamforming Design
+for RIS-Assisted V2I Systems: A Deep Learning Approach. IEEE
+Transactions on Wireless Communications, 2024. DOI:
+10.1109/TWC.2023.3327362. (MD) {[}32{]} Qian Zhang, Ju Liu, Haoge Tang,
+Zheng Dong, Yonghui Li. Practical RIS-Aided Multiuser Communications
+With Imperfect CSI: Practical Model, Amplitude Feedback, and Beamforming
+Optimization. IEEE Transactions on Wireless Communications, 2024. DOI:
+10.1109/twc.2024.3427695. (MD) {[}33{]} Fenghao Zhu, Xinquan Wang,
+Chongwen Huang, Zhaohui Yang, Xiaoming Chen, Ahmed Al Hammadi, et al..
+Robust Beamforming for RIS-Aided Communications: Gradient-Based Manifold
+Meta Learning. IEEE Transactions on Wireless Communications, 2024. DOI:
+10.1109/TWC.2024.3435023. (MD) {[}34{]} Yan Yang, Shuping Dang, Miaowen
+Wen, Bo Ai, Rose Qingyang Hu. Blockage-Aware Robust Beamforming in
+RIS-Aided Mobile Millimeter Wave MIMO Systems. IEEE Transactions on
+Wireless Communications, 2024. DOI: 10.1109/TWC.2024.3447895. (MD)
+
+Metadata audit artifact:
+\path{results/reference_metadata_final_20261007.json}; selection
+ledger: \path{literature/FINAL_BIBLIOGRAPHY_METADATA_20261007.md}.
+\end{document}

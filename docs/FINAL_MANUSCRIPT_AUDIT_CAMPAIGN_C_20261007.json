@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "checks": {
+    "body_words_6000_7000": true,
+    "references_30_40": true,
+    "figures_8": true,
+    "campaign_rows_complete": true,
+    "campaign_conditions": true,
+    "absolute_gate_pass": true,
+    "always_service_pass": true,
+    "always_work_pass": true,
+    "periodic_work_failure_retained": true,
+    "physical_timing_unknown": true,
+    "no_pending_markers": true,
+    "metadata_records_34": true,
+    "reference_crossref_pass": true,
+    "no_stale_campaign_count": true,
+    "source_hash_linked": true
+  },
+  "body_words": 6953,
+  "reference_count": 34,
+  "figure_count": 8,
+  "campaign_rows": 20480,
+  "hardware_timing": "UNKNOWN"
+}

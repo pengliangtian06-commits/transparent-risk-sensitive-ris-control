@@ -1,0 +1,7 @@
+purpose: Exact fixed-p analytical diagnostic, not RIS performance evidence
+users: 4
+epsilon: 0.1
+family_delta: 0.05
+validation_samples: [64, 128, 256, 512, 1024]
+hypothetical_outages: [0.0, 0.01, 0.025, 0.05, 0.075, 0.1, 0.15]
+scenario: One nonzero-risk user; all other users have zero outage risk

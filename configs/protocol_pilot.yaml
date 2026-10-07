@@ -1,0 +1,23 @@
+system:
+  bs_antennas: 4
+  ris_elements: 16
+  users: 4
+  noise_power: 1.0e-3
+  transmit_power: 1.0
+  rician_k: 3.0
+  csi_error_scale: 0.08
+  phase_bits: 2
+  temporal_rho: 0.8
+evaluation:
+  episodes: 4
+  channel_realizations: 4
+  outage_quantile: 0.05
+  seed: 101
+  trajectory_steps: 4
+  outage_threshold: 0.5
+  backend: numpy
+  matched_candidate_budget: 128
+training:
+  hidden_dim: 128
+  learning_rate: 1.0e-3
+  steps: 1000

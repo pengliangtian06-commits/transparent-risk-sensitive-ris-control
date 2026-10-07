@@ -1,0 +1,287 @@
+{
+  "status": "complete",
+  "analysis_dir": "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis",
+  "analysis_seed": 20261031,
+  "bootstrap_draws": 10000,
+  "bootstrap_unit": "complete independent seed block",
+  "source_sha256": "bb7739994c6cc1098ff43cdca7aa39ff1c81ee005707a185293b43588957f4bd",
+  "config_sha256": "903fc0a2bbb79f083251d0b905a6dcd1f43dd4986e3a2b4dab40214233f35e2b",
+  "effective_config_sha256": "60f9fc84b04fbe22a02a54353f370581e106cb80cf20a4762c482d873c2b4530",
+  "input_files_sha256": {
+    "manifest.json": "43193e7ea122820043998708ce0d8590a3f1d70c7fab543bf50435665b7ea22d",
+    "results.json": "b85e984ea5044cf83dd98744f617ee120ec8d0a0863abac042a97256e6b15abc",
+    "summary.csv": "26804519a777956f3446b76d6c5b3093b967e97031903fb03e55f823460d4344",
+    "raw.jsonl": "cce14b1861f8155838c480cd92b72ef6548085e3c5627a54bcab0604e92a251c"
+  },
+  "condition_count": 16,
+  "absolute_weak_user_outage": {
+    "status": "PASS",
+    "threshold": 0.05,
+    "max_upper95": 0.0,
+    "conditions": [
+      {
+        "condition": "16|2|0.12|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 99.49663427447376,
+        "total_latency_ms_p95_ci_high_simulated": 124.3862628991119
+      },
+      {
+        "condition": "16|2|0.12|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 86.88854014621029,
+        "total_latency_ms_p95_ci_high_simulated": 87.08229231625774
+      },
+      {
+        "condition": "16|2|0.28|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0015625,
+        "service_violation_rate_ci_high": 0.0046875,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 998437.5,
+        "total_latency_ms_p95_simulated": 86.80700247012282,
+        "total_latency_ms_p95_ci_high_simulated": 86.95339952527229
+      },
+      {
+        "condition": "16|2|0.28|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 86.78158037921094,
+        "total_latency_ms_p95_ci_high_simulated": 86.88607076248991
+      },
+      {
+        "condition": "16|4|0.12|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 2000000.0,
+        "total_latency_ms_p95_simulated": 118.75799554472906,
+        "total_latency_ms_p95_ci_high_simulated": 119.85522889466029
+      },
+      {
+        "condition": "16|4|0.12|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 2000000.0,
+        "total_latency_ms_p95_simulated": 118.00600021972059,
+        "total_latency_ms_p95_ci_high_simulated": 118.98773859184439
+      },
+      {
+        "condition": "16|4|0.28|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.003125,
+        "service_violation_rate_ci_high": 0.00625,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1993750.0,
+        "total_latency_ms_p95_simulated": 119.57900274530402,
+        "total_latency_ms_p95_ci_high_simulated": 120.62243668027077
+      },
+      {
+        "condition": "16|4|0.28|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 2000000.0,
+        "total_latency_ms_p95_simulated": 118.21341596543789,
+        "total_latency_ms_p95_ci_high_simulated": 119.1990176895024
+      },
+      {
+        "condition": "32|2|0.12|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 227.06161276521016,
+        "total_latency_ms_p95_ci_high_simulated": 227.98546233674278
+      },
+      {
+        "condition": "32|2|0.12|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 225.67543770044722,
+        "total_latency_ms_p95_ci_high_simulated": 226.42121379972923
+      },
+      {
+        "condition": "32|2|0.28|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 225.00617233028606,
+        "total_latency_ms_p95_ci_high_simulated": 225.43983315091373
+      },
+      {
+        "condition": "32|2|0.28|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1000000.0,
+        "total_latency_ms_p95_simulated": 226.11026518006838,
+        "total_latency_ms_p95_ci_high_simulated": 227.0057860399338
+      },
+      {
+        "condition": "32|4|0.12|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 2000000.0,
+        "total_latency_ms_p95_simulated": 386.38363915961236,
+        "total_latency_ms_p95_ci_high_simulated": 388.3047292150686
+      },
+      {
+        "condition": "32|4|0.12|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0,
+        "service_violation_rate_ci_high": 0.0,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 2000000.0,
+        "total_latency_ms_p95_simulated": 388.08253540035366,
+        "total_latency_ms_p95_ci_high_simulated": 389.38076264852225
+      },
+      {
+        "condition": "32|4|0.28|0.7",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.00234375,
+        "service_violation_rate_ci_high": 0.0046875,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1995312.5,
+        "total_latency_ms_p95_simulated": 384.3495789852386,
+        "total_latency_ms_p95_ci_high_simulated": 388.2149825113129
+      },
+      {
+        "condition": "32|4|0.28|0.98",
+        "weak_user_outage": 0.0,
+        "weak_user_outage_upper95": 0.0,
+        "service_violation_rate": 0.0046875,
+        "service_violation_rate_ci_high": 0.009375,
+        "rejection_rate": 0.0,
+        "rejection_rate_ci_high": 0.0,
+        "goodput_bps": 1990625.0,
+        "total_latency_ms_p95_simulated": 380.31575118973706,
+        "total_latency_ms_p95_ci_high_simulated": 383.84680356090576
+      }
+    ]
+  },
+  "paired_comparisons": {
+    "periodic_risk": {
+      "conditions": 16,
+      "weak_outage_delta_max_upper95": 0.0,
+      "goodput_relative_delta_min_lower05": -0.0054439484126984185,
+      "rate_evaluations_reduction_min_lower05": -0.331982421875,
+      "service_guardrail": {
+        "status": "PASS",
+        "reason": "upper 95% outage delta <= 0.01 and lower 95% goodput delta >= -0.05",
+        "outage_delta_threshold": 0.01,
+        "goodput_delta_threshold": -0.05
+      },
+      "work_reduction_guardrail": {
+        "status": "FAIL",
+        "reason": "lower 95% bound for phase-control rate-evaluation reduction >= 0.20",
+        "reduction_threshold": 0.2
+      }
+    },
+    "always_risk": {
+      "conditions": 16,
+      "weak_outage_delta_max_upper95": 0.0,
+      "goodput_relative_delta_min_lower05": -0.0061526959772669546,
+      "rate_evaluations_reduction_min_lower05": 0.333984375,
+      "service_guardrail": {
+        "status": "PASS",
+        "reason": "upper 95% outage delta <= 0.01 and lower 95% goodput delta >= -0.05",
+        "outage_delta_threshold": 0.01,
+        "goodput_delta_threshold": -0.05
+      },
+      "work_reduction_guardrail": {
+        "status": "PASS",
+        "reason": "lower 95% bound for phase-control rate-evaluation reduction >= 0.20",
+        "reduction_threshold": 0.2
+      }
+    },
+    "periodic_nominal": {
+      "conditions": 16,
+      "weak_outage_delta_max_upper95": 0.0,
+      "goodput_relative_delta_min_lower05": -0.003125,
+      "rate_evaluations_reduction_min_lower05": -0.33203125,
+      "service_guardrail": {
+        "status": "PASS",
+        "reason": "upper 95% outage delta <= 0.01 and lower 95% goodput delta >= -0.05",
+        "outage_delta_threshold": 0.01,
+        "goodput_delta_threshold": -0.05
+      },
+      "work_reduction_guardrail": {
+        "status": "FAIL",
+        "reason": "lower 95% bound for phase-control rate-evaluation reduction >= 0.20",
+        "reduction_threshold": 0.2
+      }
+    }
+  },
+  "rejection_and_service_diagnostics": {
+    "max_posterior_rejection_rate_ci_high": 0.0,
+    "max_posterior_service_violation_rate_ci_high": 0.009375,
+    "accounting": "rejection and failed delivery remain in every scheduled-slot denominator"
+  },
+  "latency": {
+    "status": "UNKNOWN",
+    "reason": "No physical slot duration, phase-write completion, transfer timing, or hardware timer trace is present.",
+    "maximum_simulated_total_latency_p95_ms": 388.08253540035366,
+    "maximum_simulated_total_latency_p95_ci_high_ms": 389.38076264852225,
+    "scope": "simulation_only"
+  },
+  "baseline_tuning": {
+    "status": "PASS",
+    "reason": "hash-linked baseline freeze with disjoint development and held-out seed blocks",
+    "freeze_artifact": "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis\\baseline_freeze.json"
+  },
+  "release_decision": "NO-GO / not yet evidenced"
+}

@@ -1,0 +1,68 @@
+{
+  "status": "frozen",
+  "frozen_at": "2026-10-07",
+  "candidate": "posterior_triggered",
+  "candidate_policy": "guard1_revision",
+  "primary_gates": {
+    "absolute_weak_user_outage_upper95_max": 0.05,
+    "weak_user_outage_delta_upper95_vs_always_risk_max": 0.01,
+    "goodput_relative_delta_lower05_vs_always_risk_min": -0.05,
+    "rate_evaluations_reduction_lower05_vs_always_risk_min": 0.2,
+    "physical_phase_write_and_slot_timing": "required; no simulation substitute"
+  },
+  "selection_rule": "Select the lowest-cost development candidate that passes all primary statistical gates on every declared development condition; ties by lower simulated P95 latency, then lower rate evaluations.",
+  "development_seed_blocks": [
+    809,
+    811,
+    821,
+    823
+  ],
+  "development_artifact": "results\\\\controller_shift_dev_guard_per_user_guard1_revision_20261007_jetson",
+  "development_analysis_artifact": "results\\\\analysis_guard1_revision_dev_20261007",
+  "development_config_sha256": "b9eeb6c1e856252378fcf5685b013f5232b8555dff682c5449d6d4ffef75b392",
+  "development_effective_config_sha256": "96b050e3e7160c0ababebde009fbedcf3d7c8b464f3939ed049a7b53edae37a5",
+  "held_out_seed_blocks": [
+    1103,
+    1109,
+    1117,
+    1123,
+    1129,
+    1151,
+    1153,
+    1163,
+    1171,
+    1181
+  ],
+  "no_seed_overlap": true,
+  "held_out_config_path": "configs\\controller_shift_test_final_guard1_revision_full.yaml",
+  "held_out_config_sha256": "903fc0a2bbb79f083251d0b905a6dcd1f43dd4986e3a2b4dab40214233f35e2b",
+  "held_out_base_seed": 20261030,
+  "held_out_effective_config_sha256": "60f9fc84b04fbe22a02a54353f370581e106cb80cf20a4762c482d873c2b4530",
+  "source_sha256": "bb7739994c6cc1098ff43cdca7aa39ff1c81ee005707a185293b43588957f4bd",
+  "planned_held_out_blocks": 10,
+  "power_plan": "results\\\\power_plan_guard1_revision_dev_20261007.json",
+  "stopping_rule": "Run exactly the planned ten held-out seed blocks; do not stop early, replace seeds, or tune policy after reading held-out rows.",
+  "timing_status": "PENDING until a real RIS phase-write interface and measured slot trace are available.",
+  "superseded_reason": null,
+  "superseded_by": null,
+  "held_out_full_condition_grid": {
+    "ris_elements": [
+      16,
+      32
+    ],
+    "users": [
+      2,
+      4
+    ],
+    "error_scales": [
+      0.12,
+      0.28
+    ],
+    "temporal_rhos": [
+      0.7,
+      0.98
+    ]
+  },
+  "planned_rows": 20480,
+  "planned_conditions": 640
+}

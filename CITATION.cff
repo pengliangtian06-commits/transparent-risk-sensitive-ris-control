@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "Transparent Risk-Sensitive RIS Phase Control Under CSI Uncertainty"
+type: software
+authors:
+  - family-names: Tian
+    given-names: Pengliang
+    orcid: "https://orcid.org/0009-0003-5941-9797"
+  - family-names: Zhang
+    given-names: Pengyuan
+  - family-names: Sun
+    given-names: Haoshan
+  - family-names: Zhang
+    given-names: Changjiang
+    orcid: "https://orcid.org/0009-0002-9936-1377"
+    affiliation: "Century College, Beijing University of Posts and Telecommunications"
+abstract: "Reproducible normalized RIS phase-control simulation with temporal CSI uncertainty and a frozen held-out Campaign C."
+license: MIT
+repository-code: "https://github.com/pengliangtian06-commits/transparent-risk-sensitive-ris-control"

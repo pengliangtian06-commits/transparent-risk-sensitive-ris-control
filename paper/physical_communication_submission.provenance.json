@@ -1,0 +1,21 @@
+{
+  "status": "built",
+  "build_seed": 20261007,
+  "markdown": "paper\\physical_communication_draft.md",
+  "markdown_sha256": "b4d32b8238cfa1865f0b0d48e28adcc476befa8f5fde36e4b3abbe6e9163bc1d",
+  "tex_sha256": "1dbcf6a3bb083a8afba5bf0f70898e452b5f3b46a407abe36ca6568691533558",
+  "figures": {
+    "1": "figure01_protocol_provenance.pdf",
+    "2": "figure02_paired_forest_always_risk.pdf",
+    "3": "figure03_error_rho_heatmap.pdf",
+    "4": "figure04_absolute_outage_gate.pdf",
+    "5": "figure05_latency_unknown_boundary.pdf",
+    "6": "figure06_cost_service_conditional.pdf",
+    "7": "figure07_freeze_protocol.pdf",
+    "8": "figure08_campaign_boundary.pdf"
+  },
+  "figure_root": "../results/figures/campaign_c_20261007",
+  "two_column": true,
+  "tables": 6,
+  "compiler_requirement": "XeLaTeX-compatible"
+}

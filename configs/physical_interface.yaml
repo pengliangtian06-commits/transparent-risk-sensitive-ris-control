@@ -1,0 +1,16 @@
+purpose: Realizable quantized RIS pilot and causal augmented posterior qualification
+system:
+  bs_antennas: 4
+  users: 4
+  noise_variance: 0.02
+  coefficient_variance: 1.0
+  channel_ar: 0.95
+  error_rhos: [0.0, 0.8, 0.95]
+  ris_elements: [16, 32, 64]
+  phase_bits: [1, 2]
+evaluation:
+  episodes: 8
+  slots: 8
+  seeds: [401, 409, 419, 421]
+  credible_probability: 0.95
+  bootstrap_draws: 500
