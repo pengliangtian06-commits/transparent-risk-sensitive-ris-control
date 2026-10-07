@@ -4,8 +4,8 @@
   "campaign_directory": "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson",
   "analysis_directory": "results\\controller_shift_test_final_guard1_revision_full_20261007_jetson_analysis",
   "remote_recheck": {
-    "host": "192.168.55.1",
-    "user": "PLT",
+    "host": "Jetson Orin Nano (address withheld in public archive)",
+    "user": "operator account withheld",
     "process_inventory": "no active controller runner, verifier, or analysis process",
     "checked_at": "2026-10-07T20:11:25+08:00"
   },
