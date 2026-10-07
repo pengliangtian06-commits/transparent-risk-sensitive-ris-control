@@ -2,8 +2,8 @@
   "status": "built",
   "build_seed": 20261007,
   "markdown": "paper\\physical_communication_draft.md",
-  "markdown_sha256": "84faa6a946c9b7db761dae57e1464cf0bb9509a518ce3d84f642e57b5b4403b2",
-  "tex_sha256": "abe3c513c58bb38fc317a9c524961c7c0e156534e7167ff7ee5ee0c610044415",
+  "markdown_sha256": "bd3a8d82b229ff8b3fc59b40abf3a4e5ad666f330388fefde0aa087bee7ac2cb",
+  "tex_sha256": "2d73e915ce3387ecdcae7f6f74a15c5939aeac72dc39d0c0c1745d9a02819fb2",
   "figures": {
     "1": "figure01_protocol_provenance.pdf",
     "2": "figure02_paired_forest_always_risk.pdf",

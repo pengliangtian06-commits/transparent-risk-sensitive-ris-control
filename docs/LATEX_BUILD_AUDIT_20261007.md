@@ -3,7 +3,7 @@
 ## Result
 
 The submission source was regenerated from the audited Markdown manuscript and
-compiled successfully with local MiKTeX XeLaTeX. The final PDF is 13 pages and
+compiled successfully with local MiKTeX XeLaTeX. The final PDF is 14 pages and
 contains all eight audited figures and six inserted tables.
 
 ## Reproducible build
@@ -20,10 +20,10 @@ xelatex -interaction=nonstopmode -halt-on-error -file-line-error physical_commun
 The generator records the byte-level source hash in
 `paper/physical_communication_submission.provenance.json`. The recorded TeX
 SHA-256 is
-`6a7bf83efbb2e7cb40ce35fb587c01d0c05566683f5c7f57055393beb1b1b9c0`, which
+`2d73e915ce3387ecdcae7f6f74a15c5939aeac72dc39d0c0c1745d9a02819fb2`, which
 matches the generated file after writing with explicit LF line endings. The
 final PDF SHA-256 is
-`0e8bc2dc58a915e60669188d2667036e19d2fc1e3ebee11a8f1f7ffb04bcefbf`.
+`6d4b7c4f1d8bb77c957d3bd0a5941eb1345a85892369df19140ab115a5347fc8`.
 
 ## Automated checks
 
@@ -51,13 +51,13 @@ XeLaTeX executable above.
 
 ## Submission fields still requiring author input
 
-The source intentionally retains placeholders for author names and
-affiliations. Before submission, complete the author list, affiliations,
-funding, competing-interests confirmation, CRediT roles, data/code release
-URL, journal article type, and publisher-version citation metadata. The PDF
-continues to state that physical RIS phase-write timing, physical slot timing,
-and OTA validation are UNKNOWN/NO-GO; those claims must not be inferred from
-the simulator timing record.
+The source contains the supplied author list, affiliations, contribution
+statement, no-external-funding statement, and no-competing-interests statement.
+The public data/code archive is https://github.com/pengliangtian06-commits/
+transparent-risk-sensitive-ris-control with DOI 10.5281/zenodo.23220663. The
+PDF continues to state that physical RIS phase-write timing, physical slot
+timing, and OTA validation are UNKNOWN/NO-GO; those claims must not be inferred
+from the simulator timing record.
 
 ## Figure and rebuild update — 2026-10-08
 
@@ -79,13 +79,13 @@ alignment audit is `PASS` at the 1.5 pt tolerance.
 
 All eight final figure PDFs now report collision-audit `PASS` (0 failures, 0
 warnings). Figures 2–8 report alignment `PASS`; the single-panel schematic
-recorded `NOT APPLICABLE`. The rebuilt manuscript remains 13 pages, with zero
+recorded `NOT APPLICABLE`. The rebuilt manuscript remains 14 pages, with zero
 LaTeX errors, zero undefined references/citations, and zero overfull boxes in
 the local XeLaTeX log. The built-in editor compiler was retried and again
 returned the host error `Unable to find standard directories for platform`;
 local MiKTeX XeLaTeX is the verified compiler for this environment.
 
-The current TeX SHA-256 remains
-`2d994e52df734c9c3976ccde3ee0b65b37dafc900ef7ca027081868f5af5d7c4`.
+The current TeX SHA-256 is
+`2d73e915ce3387ecdcae7f6f74a15c5939aeac72dc39d0c0c1745d9a02819fb2`.
 The current manuscript PDF SHA-256 is
-`e9041d803bc1a39e81fbba27c5e2dc056b27caf3e764a76eacbe4760d147923e`.
+`6d4b7c4f1d8bb77c957d3bd0a5941eb1345a85892369df19140ab115a5347fc8`.
